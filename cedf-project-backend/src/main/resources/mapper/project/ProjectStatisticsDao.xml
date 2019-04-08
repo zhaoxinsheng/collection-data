@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.project.dao.ProjectStatisticsDao">
+
+    <!--  项目分类金额统计  -->
+	<select id="getProjectStatisticsAmount"  resultType="io.nakong.modules.project.vo.ProjectStatisticsCategoryVo">
+	
+		SELECT   
+			sum(projectAmount) totalProjectAmount,
+	        sum(donateAmount) totalDonateAmount,
+	        sum(receiveAmount) totalReceiveAmount,        
+	        (sum(donateAmount) - sum(receiveAmount)) totalBalanceAmount
+	        
+		FROM (
+			
+          select (select CONCAT(pt.id ,'.', pt.name) from tb_project_type pt where pt.id = project.project_type) projetType,
+       sum(ifnull(project.cash_amount,0) + ifnull(project.material_amount,0)) projectAmount,
+		       count(1) projectNum,
+        ifnull(donate.donateAmount,0 ) donateAmount, 
+        ifnull(receive.receiveAmount,0) receiveAmount
+		from tb_project project
+		 left join 
+		(
+		select t.project_type ,sum(ifnull(tda.cash_amount,0)) donateAmount
+		from tb_project t ,tb_donate_amount tda
+		where  t.id = tda.project_id 	
+                 <if test="startDate !=null and startDate !=''">
+					AND t.date_time &gt;= #{startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="endDate !=null  and endDate !=''">
+					AND t.date_time &lt;= #{endDate,jdbcType=VARCHAR}
+				</if> 	  
+		         group by t.project_type  ) donate on project.project_type = donate.project_type
+		 left join 		
+		 (
+				select t.project_type ,sum( ifnull(tr.cash_amount,0))   receiveAmount
+				from tb_project t ,tb_receiver_amount tr
+				where  t.id = tr.project_id 
+		        <if test="startDate !=null and startDate !=''">
+					AND t.date_time &gt;= #{startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="endDate !=null  and endDate !=''">
+					AND t.date_time &lt;= #{endDate,jdbcType=VARCHAR}
+				</if> 
+		       group by t.project_type ) receive on project.project_type = receive.project_type
+             where 1=1 
+            <if test="startDate !=null and startDate !=''">
+					AND project.date_time &gt;= #{startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="endDate !=null  and endDate !=''">
+					AND project.date_time &lt;= #{endDate,jdbcType=VARCHAR}
+				</if> 
+	   group by project.project_type 
+		) amount  
+	</select>
+	<!--  项目分类金额统计  -->
+	 <select id="getProjectStatisticsByCategory"  resultType="io.nakong.modules.project.vo.ProjectCategory">
+		  SELECT  
+			projetType, 
+			projectNum, 
+			projectAmount    projectAmount,
+	         donateAmount    donateAmount,
+	         receiveAmount receiveAmount,        
+	         (donateAmount - receiveAmount) balanceAmount 
+	        
+		FROM (
+			 select (select CONCAT(pt.id ,'.', pt.name) from tb_project_type pt where pt.id = project.project_type) projetType,
+       sum(ifnull(project.cash_amount,0) + ifnull(project.material_amount,0)) projectAmount,
+		       count(1) projectNum,
+         ifnull(donate.donateAmount,0 ) donateAmount, 
+        ifnull(receive.receiveAmount,0) receiveAmount
+		from tb_project project 
+		left join 
+		(
+		select t.project_type ,sum(ifnull(tda.cash_amount,0)) donateAmount
+		from tb_project t ,tb_donate_amount tda
+		where  t.id = tda.project_id 	
+             <if test="startDate !=null and startDate !=''">
+					AND t.date_time &gt;= #{startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="endDate !=null  and endDate !=''">
+					AND t.date_time &lt;= #{endDate,jdbcType=VARCHAR}
+				</if> 	  
+		    group by t.project_type  ) donate on project.project_type = donate.project_type
+	  left join 		
+		 (
+		select t.project_type ,sum( ifnull(tr.cash_amount,0))   receiveAmount
+		from tb_project t ,tb_receiver_amount tr
+		where  t.id = tr.project_id 
+		        <if test="startDate !=null and startDate !=''">
+					AND t.date_time &gt;= #{startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="endDate !=null  and endDate !=''">
+					AND t.date_time &lt;= #{endDate,jdbcType=VARCHAR}
+				</if> 
+		      group by t.project_type ) receive on project.project_type = receive.project_type
+             where 1=1 
+        <if test="startDate !=null and startDate !=''">
+					AND project.date_time &gt;= #{startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="endDate !=null  and endDate !=''">
+					AND project.date_time &lt;= #{endDate,jdbcType=VARCHAR}
+				</if> 
+	        group by project.project_type 
+		) amount  
+
+	</select>
+	
+	<!--  协议金额统计  总金额-->
+	<select id="getProjectStatisticsAmountByProjectNo"   resultType="io.nakong.modules.project.vo.ProjectStatisticsCategoryVo">
+	
+	  select sum(totalProjectAmount) totalProjectAmount,sum(totalDonateAmount) totalDonateAmount,
+	        sum(totalReceiveAmount) totalReceiveAmount ,(sum(totalDonateAmount) - sum(totalReceiveAmount)) totalBalanceAmount from (
+		select t.project_no,
+		  sum(ifnull(t.cash_amount,0) + ifnull(t.material_amount,0)) totalProjectAmount,
+		  (select sum(ifnull(tda.meterial_amount,0) + ifnull(tda.cash_amount,0)) from tb_donate_amount tda where tda.project_id = t.id) totalDonateAmount,
+		  (select sum(ifnull(tr.cash_amount,0)) from tb_receiver_amount tr where tr.project_id = t.id ) totalReceiveAmount
+		from tb_project t 
+		WHERE 1=1		 
+		<if test="startDate !=null and startDate !=''">
+			AND t.date_time &gt;= #{startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="endDate !=null and endDate !='' ">
+			AND t.date_time &lt;= #{endDate,jdbcType=VARCHAR}
+		</if> 
+		<if test="projectName !=null and projectName !='' ">
+			AND t.project_name like CONCAT('%',#{projectName},'%')
+		</if> 
+		group by t.project_no
+		) amount 
+	</select>
+	<!--  协议金额统计 -->
+	<select id="getProjectStatisticsByProjectNoList"  parameterType="io.nakong.common.utils.Query" resultType="io.nakong.modules.project.vo.ProjectCategory">
+		select projectName,
+          projectNo,
+          projectAmount,
+          donateAmount,
+          receiveAmount, 
+          (ifnull(donateAmount,0) - ifnull(receiveAmount,0)) balanceAmount 
+		from (
+        	 select  
+			 	t.project_name projectName, t.project_no projectNo, 
+       			sum(ifnull(t.cash_amount,0) + ifnull(t.material_amount,0)) projectAmount,
+				(select sum(ifnull(tda.meterial_amount,0) + ifnull(tda.cash_amount,0)) from tb_donate_amount tda where tda.project_id = t.id) donateAmount,
+				(select sum(ifnull(tr.cash_amount,0))  from tb_receiver_amount tr where tr.project_id = t.id ) receiveAmount 
+			from tb_project t where 1=1
+			<if test="query.startDate !=null and query.startDate !=''">
+				AND t.date_time &gt;= #{query.startDate,jdbcType=VARCHAR}
+			</if>
+			<if test="query.endDate !=null  and query.endDate !=''">
+				AND t.date_time &lt;= #{query.endDate,jdbcType=VARCHAR}
+			</if> 
+			<if test="query.projectName !=null and query.projectName !='' ">
+				AND t.project_name like CONCAT('%',#{query.projectName},'%')
+			</if> 		
+			group by t.project_no 
+			) amount 
+		order by projectNo desc 
+		limit #{query.offset},#{query.limit}
+	</select>
+	
+	<!--  协议金额统计 -->
+	<select id="getProjectStatisticsByProjectNoCount"  parameterType="io.nakong.common.utils.Query" resultType="Integer">
+		 select count(1) from (
+         select  t.project_name projectName,
+          t.project_no projectNo, 
+       sum(ifnull(t.cash_amount,0) + ifnull(t.material_amount,0)) projectAmount,
+      (select sum(ifnull(tda.meterial_amount,0) + ifnull(tda.cash_amount,0)) from tb_donate_amount tda where tda.project_id = t.id) donateAmount,
+       (select sum( ifnull(tr.cash_amount,0))  from tb_receiver_amount tr where tr.project_id = t.id ) receiveAmount 
+        from tb_project t where 1=1
+        <if test="query.startDate !=null and query.startDate !=''">
+			AND t.date_time &gt;= #{query.startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="query.endDate !=null  and query.endDate !=''">
+			AND t.date_time &lt;= #{query.endDate,jdbcType=VARCHAR}
+		</if> 
+		<if test="query.projectName !=null and query.projectName !='' ">
+			AND t.project_name like CONCAT('%',#{query.projectName},'%')
+		</if> 		
+        group by t.project_no ) amount  
+	</select>
+	
+	<!-- 到账金额统计 -->
+	 <select id="getProjectStatisticsDonateAmount"  parameterType="io.nakong.common.utils.Query" resultType="io.nakong.modules.project.vo.ProjectStatisticsCategoryVo">
+		select sum(totalDonateCashAmount) totalDonateCashAmount,sum(totalDonateMaterialAmount) totalDonateMaterialAmount,
+		       (sum(totalDonateCashAmount) + sum(totalDonateMaterialAmount)) totalDonateAmount 
+		from ( select DATE_FORMAT(tda.donate_date,'%Y-%m') donateDate ,
+		        ifnull((select  sum(case when tda.amount_type = 0 then ifnull(tda.cash_amount,0) end )),0) totalDonateCashAmount,
+                ifnull((select  sum(case when tda.amount_type = 1 then ifnull(tda.cash_amount,0) end )),0) totalDonateMaterialAmount 
+                
+		 from tb_donate_amount tda 
+		 where 1=1 
+		 <if test="query.startDate !=null and query.startDate !=''">
+			AND tda.donate_date &gt;= #{query.startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="query.endDate !=null and query.endDate !='' ">
+			AND tda.donate_date &lt;= #{query.endDate,jdbcType=VARCHAR}
+		</if>	
+		<if test="query.projectName !=null and query.projectName !='' ">
+			AND t.project_name like CONCAT('%',#{query.projectName},'%')
+		</if> 
+		 group by DATE_FORMAT(tda.donate_date,'%Y-%m') 
+		) amount 
+	</select>
+	
+		<!-- 到账金额统计 -->
+	 <select id="getProjectStatisticsDonateAmountList" parameterType="io.nakong.common.utils.Query"  resultType="io.nakong.modules.project.vo.ProjectCategory">
+			select donateCashAmount,donateMaterialAmount,(donateCashAmount + donateMaterialAmount) donateAmount ,
+			       donateDate
+		from (  select
+		        ifnull((select  sum(case when tda.amount_type = 0 then ifnull(tda.cash_amount,0) end )),0) donateCashAmount,
+                ifnull((select  sum(case when tda.amount_type = 1 then ifnull(tda.cash_amount,0) end )),0) donateMaterialAmount ,
+                 DATE_FORMAT(tda.donate_date,'%Y-%m') donateDate
+		 from tb_donate_amount tda  
+		 where 1=1 
+		 <if test="query.startDate !=null and query.startDate !=''">
+			AND tda.donate_date &gt;= #{query.startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="query.endDate !=null and query.endDate !='' ">
+			AND tda.donate_date &lt;= #{query.endDate,jdbcType=VARCHAR}
+		</if>	
+		    group by DATE_FORMAT(tda.donate_date,'%Y-%m') 
+		) amount  order by donateDate desc  	
+		limit #{query.offset},#{query.limit}
+	</select>
+	
+			<!-- 到账金额统计 -->
+	 <select id="getProjectStatisticsDonateAmountListCount" parameterType="io.nakong.common.utils.Query"  resultType="Integer">
+			select count(1) as count 
+		from (  select
+		        (select  sum(case when tda.amount_type = 0 then ifnull(tda.cash_amount,0) end )) donateCashAmount,
+                (select  sum(case when tda.amount_type = 1 then ifnull(tda.cash_amount,0) end )) donateMaterialAmount ,
+		         DATE_FORMAT(tda.donate_date,'%Y-%m') donateDate
+		 from tb_donate_amount tda  
+		 where 1=1 
+		 <if test="query.startDate !=null and query.startDate !=''">
+			AND tda.donate_date &gt;= #{query.startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="query.endDate !=null and query.endDate !='' ">
+			AND tda.donate_date &lt;= #{query.endDate,jdbcType=VARCHAR}
+		</if>	
+		    group by DATE_FORMAT(tda.donate_date,'%Y-%m') 
+		) amount   
+	</select>
+	
+	<!-- 支出金额统计 -->
+	 <select id="getProjectStatisticsReceiveAmount"  parameterType="io.nakong.common.utils.Query" resultType="io.nakong.modules.project.vo.ProjectStatisticsCategoryVo">
+		select (totalReceiveCashAmount + totalReceiveMaterialAmount) totalReceiveAmount,totalReceiveCashAmount,totalReceiveMaterialAmount  
+		from ( select
+		        ifnull((select  sum(case when tda.amount_type = 0 then ifnull(tda.cash_amount,0) end )),0) totalReceiveCashAmount,
+                ifnull((select  sum(case when tda.amount_type = 1 then ifnull(tda.cash_amount,0) end )),0) totalReceiveMaterialAmount 
+		 from tb_receiver_amount tda 
+		 where 1=1 
+		 <if test="query.startDate !=null and query.startDate !=''">
+			AND tda.receive_date &gt;= #{query.startDate,jdbcType=VARCHAR}
+		</if>
+		<if test="query.endDate !=null and query.endDate !='' ">
+			AND tda.receive_date &lt;= #{query.endDate,jdbcType=VARCHAR}
+		</if> 
+		) amount 
+	</select>
+	
+	<!-- 支出金额统计 -->
+	 <select id="getProjectStatisticsReceiveAmountList" parameterType="io.nakong.common.utils.Query"  resultType="io.nakong.modules.project.vo.ProjectCategory">
+		select
+			receiveCashAmount,
+			receiveMaterialAmount,
+			(receiveCashAmount + receiveMaterialAmount) receiveAmount ,
+			receiveDate
+		from ( select  		           
+		        	ifnull((select  sum(case when tda.amount_type = 0 then ifnull(tda.cash_amount,0) end )),0) receiveCashAmount,
+					ifnull( (select  sum(case when tda.amount_type = 1 then ifnull(tda.cash_amount,0) end )),0) receiveMaterialAmount ,
+		         	DATE_FORMAT(tda.receive_date,'%Y-%m') receiveDate
+		 		from tb_receiver_amount tda  
+		 		where 1=1 
+				<if test="query.startDate !=null and query.startDate !=''">
+					AND tda.receive_date &gt;= #{query.startDate,jdbcType=VARCHAR}
+				</if>
+				<if test="query.endDate !=null and query.endDate !='' ">
+					AND tda.receive_date &lt;= #{query.endDate,jdbcType=VARCHAR}
+				</if>	
+					group by DATE_FORMAT(tda.receive_date,'%Y-%m') 
+		) amount  
+		order by receiveDate desc  	
+		limit #{query.offset},#{query.limit}
+	</select>
+	
+		<!-- 支出金额统计 -->
+	 <select id="getProjectStatisticsReceiveAmountListCount" parameterType="io.nakong.common.utils.Query"  resultType="Integer">
+		select count(1)
+		 from ( select
+		 ifnull((select  sum(case when tda.amount_type = 0 then ifnull(tda.cash_amount,0) end )),0) receiveCashAmount,
+		 ifnull( (select  sum(case when tda.amount_type = 1 then ifnull(tda.cash_amount,0) end )),0) receiveMaterialAmount ,
+		 DATE_FORMAT(tda.receive_date,'%Y-%m') receiveDate
+		 from tb_receiver_amount tda
+		 where 1=1
+		 <if test="query.startDate !=null and query.startDate !=''">
+			 AND tda.receive_date &gt;= #{query.startDate,jdbcType=VARCHAR}
+		 </if>
+		 <if test="query.endDate !=null and query.endDate !='' ">
+			 AND tda.receive_date &lt;= #{query.endDate,jdbcType=VARCHAR}
+		 </if>
+		 group by DATE_FORMAT(tda.receive_date,'%Y-%m')
+		 ) amount
+	 </select>
+	
+</mapper>

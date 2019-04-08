@@ -1,0 +1,2 @@
+jx:area(lastCell=”U4”)
+jx:each(items=”projects” var=”pjt” lastCell=”U4”)

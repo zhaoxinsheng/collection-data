@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.project.dao.ProjectSummaryDao">
+
+	<select id="queryListByCriteria" parameterType="io.nakong.common.utils.Query" resultType="io.nakong.modules.project.vo.ProjectSummaryVo">
+		SELECT
+		p.*, d.company_name donatorName,
+		d.address_detail donatorAddress,
+		d.legal_person donatorLegalPerson,
+		d.postal_code donatorPostalCode,
+		d.relate_person donatorRelatePerson,
+		d.company_telephone donatorCompanyTelephone,
+		IFNULL(
+		_rec_tmp.receive_company,
+		''
+		) receiverName,
+		IFNULL(
+		_rec_tmp.receiver_address_detail,
+		''
+		) receiverAddressDetail,
+		IFNULL(
+		_rec_tmp.receiver_relate_person,
+		''
+		) receiverRelatePerson,
+		IFNULL(
+		_rec_tmp.receiver_telephone,
+		''
+		) receiverTelephone,
+		p.NAME typeName,
+		IFNULL(_dnt_tmp_c.cash_amount, 0) inCashAmount,
+		IFNULL(
+		_dnt_tmp_m.meterial_amount,
+		0
+		) inMeterialAmount,
+		IFNULL(_ra_tmp_c.cash_amount, 0) outCashAmount,
+		IFNULL(
+		_ra_tmp_m.meterial_amount,
+		0
+		) outMeterialAmount,
+		(
+		IFNULL(_dnt_tmp_c.cash_amount, 0) + IFNULL(
+		_dnt_tmp_m.meterial_amount,
+		0
+		) - IFNULL(_ra_tmp_c.cash_amount, 0) - IFNULL(
+		_ra_tmp_m.meterial_amount,
+		0
+		)
+		) balance
+		FROM
+		 (select   tp.`id`,  `project_no` ,  `project_name`,  `project_content`,  `cash_amount` ,  `material_amount`,  tp.`project_type` ,  `date_time` ,
+		  `insert_user`,  `insert_time` ,  `update_time` ,  `donator_id` ,  `assistant_no`,  `project_purpose` ,t.name
+		     from tb_project tp
+				INNER JOIN tb_project_type t ON (tp.project_type = t.id)
+		     union all 
+		      select d.`id`,  `project_no` ,  `project_name`,  `project_content`,  `cash_amount` ,  `material_amount`,  `project_type` ,  `date_time` ,
+		  `insert_user`,  `insert_time` ,  `update_time` ,  `donator_id` ,  `assistant_no`,  `project_purpose` ,''
+		      from tb_project d
+         where d.project_type is null) p 		
+		INNER JOIN tb_donator d ON p.donator_id = d.id
+		LEFT JOIN (
+		SELECT
+		GROUP_CONCAT(r.receive_company) receive_company,
+		GROUP_CONCAT(r.address_detail) receiver_address_detail,
+		GROUP_CONCAT(r.relate_person) receiver_relate_person,
+		GROUP_CONCAT(r.receive_telephone) receiver_telephone,
+		r.project_id
+		FROM
+		tb_receiver r
+		GROUP BY
+		r.project_id
+		) _rec_tmp ON _rec_tmp.project_id = p.id
+		LEFT JOIN (
+		SELECT
+		sum(IFNULL(da.cash_amount, 0)) cash_amount,
+		da.amount_type,
+		da.project_id
+		FROM
+		tb_donate_amount da
+		WHERE
+		da.amount_type = 0
+		GROUP BY
+		da.project_id,
+		da.amount_type
+		) _dnt_tmp_c ON _dnt_tmp_c.project_id = p.id
+		LEFT JOIN (
+		SELECT
+		sum(IFNULL(da.cash_amount, 0)) meterial_amount,
+		da.project_id
+		FROM
+		tb_donate_amount da
+		WHERE
+		da.amount_type = 1
+		GROUP BY
+		da.project_id
+		) _dnt_tmp_m ON _dnt_tmp_m.project_id = p.id
+		LEFT JOIN (
+		SELECT 
+   (select sum(ifnull(amount,0)) from tb_receiver_amount_detail k where k.receiver_amount_id = ra.id) cash_amount,
+		ra.project_id
+		FROM
+		tb_receiver_amount ra
+		WHERE
+		ra.amount_type = 0
+		GROUP BY
+		ra.project_id
+		) _ra_tmp_c ON _ra_tmp_c.project_id = p.id
+		LEFT JOIN (
+		SELECT
+(select sum(ifnull(amount,0)) from tb_receiver_amount_detail k where k.receiver_amount_id = ra.id) meterial_amount,
+		ra.project_id
+		FROM
+		tb_receiver_amount ra
+		WHERE
+		ra.amount_type = 1
+		GROUP BY
+		ra.project_id
+		) _ra_tmp_m ON _ra_tmp_m.project_id = p.id
+		WHERE
+		1 = 1
+		<if test="query.projectNo !=null and query.projectNo !=''">
+			AND p.project_no LIKE #{query.projectNo}
+		</if>
+		<if test="query.donatorName !=null and query.donatorName !=''">
+			AND d.company_name LIKE #{query.donatorName}
+		</if>
+		<if test="query.receiverName !=null and query.receiverName !=''">
+			AND _rec_tmp.receive_company LIKE #{query.receiverName}
+		</if>
+		<if test="query.startDate !=null">
+			AND p.date_time &gt;= #{query.startDate,jdbcType=DATE}
+		</if>
+		<if test="query.endDate !=null">
+			AND p.date_time &lt;= #{query.endDate,jdbcType=DATE}
+		</if>
+		 
+		<if test="query.projectType !=null and query.projectType !='' and query.projectType !='99'">
+			AND p.project_type = #{query.projectType}
+		</if>
+		<if test="query.projectType !=null  and query.projectType !='' and query.projectType =='99'">
+			AND p.project_type is null
+		</if>
+		
+		order by p.project_no DESC
+		<if test="query.limit > 0">
+			limit #{query.offset} ,#{query.limit}
+		</if>
+	</select>
+
+	<select id="countByCriteria" parameterType="io.nakong.common.utils.Query" resultType="long">
+		SELECT
+		count(p.id)
+		FROM
+		tb_project p,
+		tb_donator d,
+		(
+		SELECT
+		GROUP_CONCAT(r.receive_company) receive_company,
+		r.project_id
+		FROM
+		tb_receiver r
+		GROUP BY
+		r.project_id
+		) _tmp
+		WHERE
+		p.donator_id = d.id
+		AND _tmp.project_id = p.id
+		<if test="query.projectNo !=null and query.projectNo !=''">
+			AND p.project_no LIKE #{query.projectNo}
+		</if>
+		<if test="query.donatorName !=null and query.donatorName !=''">
+			AND d.company_name LIKE #{query.donatorName}
+		</if>
+		<if test="query.receiverName !=null and query.receiverName !=''">
+			AND _tmp.receive_company LIKE #{query.receiverName}
+		</if>
+		<if test="query.startDate !=null">
+			AND p.date_time &gt;= #{query.startDate,jdbcType=DATE}
+		</if>
+		<if test="query.endDate !=null">
+			AND p.date_time &lt;= #{query.endDate,jdbcType=DATE}
+		</if>
+		<if test="query.projectType !=null and   query.projectType !='' and query.projectType !='99'">
+			AND p.project_type LIKE #{query.projectType}
+		</if>
+		<if test="query.projectType !=null  and query.projectType !='' and query.projectType =='99'">
+			AND p.project_type is null
+		</if>
+	</select>
+
+	<delete id="deleteDonatorByProjects">
+		DELETE
+			FROM
+				tb_donator
+			WHERE
+				id IN (
+					SELECT
+						p.donator_id
+					FROM
+						tb_project p
+					WHERE
+						p.id IN
+						<foreach item="projectId" collection="list" open="(" separator="," close=")">
+							#{projectId}
+						</foreach>
+				)
+	</delete>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+    <workbook>
+        <worksheet idx="0">
+            <section startRow="0" endRow="2" />
+            <loop startRow="3" endRow="3" items="donateAmountEntity" var="pjt" varType="io.nakong.modules.project.entity.DonateAmountEntity">
+                <section startRow="3" endRow="3">
+                    <mapping row="3" col="0">pjt.contractNo                            </mapping> 
+                    <mapping row="3" col="1">pjt.donateType                          </mapping>
+                    <mapping row="3" col="2">pjt.cashAmount            </mapping> 
+                    <mapping row="3" col="3">pjt.donator          </mapping> 
+                    <mapping row="3" col="4">pjt.donateDate            </mapping> 
+                    <mapping row="3" col="5">pjt.deliveryDate             </mapping> 
+                    <mapping row="3" col="6">pjt.deliveryNo           </mapping>  
+                    <mapping row="3" col="7">pjt.remark                       </mapping> 
+                </section>
+                <loopbreakcondition>
+                    <rowcheck offset="0">
+                        <cellcheck offset="0"></cellcheck>
+                    </rowcheck>
+                </loopbreakcondition>
+            </loop>
+        </worksheet>
+    </workbook>

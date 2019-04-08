@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+    <workbook>
+        <worksheet idx="0">
+            <section startRow="0" endRow="2" />
+            <loop startRow="3" endRow="3" items="receivers" var="rcv" varType="io.nakong.modules.project.vo.ReceiverVo">
+                <section startRow="3" endRow="3">
+                    <mapping row="3" col="0">rcv.projectNo                            </mapping>
+                    <mapping row="3" col="1">rcv.amountType          </mapping>
+                    <mapping row="3" col="2">rcv.cashAmount            </mapping>
+                    <mapping row="3" col="3">rcv.receiveCompany                          </mapping>
+                    <mapping row="3" col="4">rcv.secondUnit            </mapping>
+                    <mapping row="3" col="5">rcv.relatePerson            </mapping>
+                    <mapping row="3" col="6">rcv.receiveTelephone          </mapping>
+                    <mapping row="3" col="7">rcv.receiveDate                       </mapping>
+                </section>
+                <loopbreakcondition>
+                    <rowcheck offset="0">
+                        <cellcheck offset="0"></cellcheck>
+                    </rowcheck>
+                </loopbreakcondition>
+            </loop>
+        </worksheet>
+    </workbook>

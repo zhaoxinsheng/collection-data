@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+    <workbook>
+        <worksheet idx="0">
+            <section startRow="0" endRow="2" />
+            <loop startRow="3" endRow="3" items="projects" var="pjt" varType="io.nakong.modules.project.vo.ProjectVo">
+                <section startRow="3" endRow="3">
+                    <mapping row="3" col="0">pjt.projectNo                            </mapping> 
+                    <mapping row="3" col="1">pjt.projectName                          </mapping>
+                    <mapping row="3" col="2">pjt.donatorEntity.companyName            </mapping> 
+                    <mapping row="3" col="3">pjt.donatorEntity.addressDetail          </mapping> 
+                    <mapping row="3" col="4">pjt.donatorEntity.legalPerson            </mapping> 
+                    <mapping row="3" col="5">pjt.donatorEntity.postalCode             </mapping> 
+                    <mapping row="3" col="6">pjt.donatorEntity.relatePerson           </mapping> 
+                    <mapping row="3" col="7" varType="java.lang.String">pjt.donatorEntity.companyTelephone       </mapping> 
+                    <mapping row="3" col="8">pjt.projectContent                       </mapping>
+                    <mapping row="3" col="9">pjt.cashAmount                           </mapping>
+                    <mapping row="3" col="10">pjt.receiverCompany        </mapping>
+                    <mapping row="3" col="11">pjt.receiverAddressDetail         </mapping>
+                    <mapping row="3" col="12">pjt.receiverRelatePerson          </mapping>
+                    <mapping row="3" col="13" varType="java.lang.String">pjt.receiverReceiveTelephone      </mapping>
+                    <mapping row="3" col="14">pjt.projectTypeName                          </mapping>
+                    <mapping row="3" col="15">pjt.projectPurpose                          </mapping>
+                    <mapping row="3" col="16">pjt.dateTime                             </mapping> 
+                    <mapping row="3" col="17">pjt.assistantNo                          </mapping> 
+
+
+                </section>
+                <loopbreakcondition>
+                    <rowcheck offset="0">
+                        <cellcheck offset="0"></cellcheck>
+                    </rowcheck>
+                </loopbreakcondition>
+            </loop>
+        </worksheet>
+    </workbook>
