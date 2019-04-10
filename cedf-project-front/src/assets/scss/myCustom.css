@@ -1,0 +1,20 @@
+.addForm_gray_bg {
+  background-color: #cfcfcf;
+}
+.offset_left_80 div.el-form-item__content{
+  margin-left:80px !important;
+}
+
+.offset_left_10 div.el-form-item__content{
+  margin-left:10px !important;
+}
+
+.offset_left__60 div.el-form-item__content{
+  margin-left:-60px !important;
+}
+
+
+a {
+    color: #8a979e;
+    text-decoration: underline;
+}
