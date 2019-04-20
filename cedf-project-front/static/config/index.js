@@ -6,7 +6,7 @@
 
   // api接口请求地址
   // window.SITE_CONFIG['baseUrl'] = 'http://120.27.17.120:8080/cedf';
- window.SITE_CONFIG['baseUrl'] = 'http://localhost:8080/cedf';
+ window.SITE_CONFIG['baseUrl'] = '';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain']  = './'; // 域名

@@ -23,11 +23,10 @@ Vue.use(VueCookie)
 Vue.config.productionTip = false
 
 // 非生产环境, 适配mockjs模拟数据                 // api: https://github.com/nuysoft/Mock
-/**
+
 if (process.env.NODE_ENV !== 'production') {
   require('@/mock')
 }
-**/
 // 挂载全局
 Vue.prototype.$http = httpRequest // ajax请求方法
 Vue.prototype.isAuth = isAuth // 权限方法

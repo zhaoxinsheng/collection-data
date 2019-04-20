@@ -21,7 +21,7 @@ console.log('\n%c!<-------------------- 接口拦截, mock模拟数据 s -------
 fnCreate(common, false)      // 公共
 fnCreate(user, false)        // 管理员管理
 fnCreate(role, false)        // 角色管理
-fnCreate(menu, false)        // 菜单管理
+fnCreate(menu, true)        // 菜单管理
 fnCreate(log, false)         // 系统日志
 fnCreate(config, false)      // 参数管理
 fnCreate(oss, false)         // 文件服务

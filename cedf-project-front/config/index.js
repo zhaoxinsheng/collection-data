@@ -12,16 +12,21 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     // 代理列表, 是否开启代理通过[./dev.env.js]配置
-    proxyTable: devEnv.OPEN_PROXY === false ? {} : {
-      '/proxyApi': {
-        //target: 'http://120.27.17.120:8080/cedf/',
-         target: 'http://localhost:8080/cedf',
-        changeOrigin: true,
-
-        pathRewrite: {
-          '^/proxyApi': '/'
-        }
-      }
+    // proxyTable: devEnv.OPEN_PROXY === false ? {} : {
+    //   '/proxyApi': {
+    //     //target: 'http://120.27.17.120:8080/cedf/',
+    //      target: 'http://47.107.131.70:8080/cedf/',
+    //     changeOrigin: true,
+    //
+    //     pathRewrite: {
+    //       '^/proxyApi': '/'
+    //     }
+    //   }
+    // },
+    proxyTable:{
+      '/sys/':'http://47.107.131.70:8080/cedf/',
+      '/project/':'http://47.107.131.70:8080/cedf/',
+      '/collect/':'http://47.107.131.70:8080/cedf/',
     },
 
     // Various Dev Server settings
