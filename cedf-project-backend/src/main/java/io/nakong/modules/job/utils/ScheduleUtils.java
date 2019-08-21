@@ -16,6 +16,7 @@
 
 package io.nakong.modules.job.utils;
 
+import io.nakong.modules.job.entity.ScheduleJobEntity;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
@@ -26,7 +27,6 @@ import org.quartz.TriggerKey;
 
 import io.nakong.common.exception.RRException;
 import io.nakong.common.utils.Constant;
-import io.nakong.modules.job.entity.ScheduleJobEntity;
 
 /**
  * 定时任务工具类

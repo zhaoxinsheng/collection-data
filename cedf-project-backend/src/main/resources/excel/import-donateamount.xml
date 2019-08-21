@@ -2,7 +2,7 @@
     <workbook>
         <worksheet idx="0">
             <section startRow="0" endRow="2" />
-            <loop startRow="3" endRow="3" items="donateAmountEntity" var="pjt" varType="io.nakong.modules.project.entity.DonateAmountEntity">
+            <loop startRow="3" endRow="3" items="donateAmountEntity" var="pjt" varType="DonateAmountEntity">
                 <section startRow="3" endRow="3">
                     <mapping row="3" col="0">pjt.contractNo                            </mapping> 
                     <mapping row="3" col="1">pjt.donateType                          </mapping>

@@ -17,6 +17,7 @@
 package io.nakong.common.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import java.text.SimpleDateFormat;
@@ -189,4 +190,279 @@ public class DateUtils {
         }
         return "";
     }
+
+// 数控
+
+    // 获取当天开始时间
+    public static Date getStartTimeofCurrentDay() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    // 获取当天结束时间
+    public static Date getEndTimeofCurrentDay() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+
+
+
+    // 获取本周第一天时间
+    public static Date getFirstDayofWeek() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    // 本周最后一天时间
+    public static Date getEndDayOfWeek(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+    // 本月第一天
+    public static Date getFirstDayOfMonth(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH, 0);
+        cal.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+    //  获取当前月最后一天
+    public static Date getEndDayOfMonth () {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+    // 获取本年最后一天
+    public static Date getEndDayOfYear() {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.MONTH,calendar.getActualMaximum(Calendar.MONTH));
+            calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            return calendar.getTime();
+    }
+
+    // 获取本年的第一天
+    public static Date getFirstDayOfYear() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH,calendar.getActualMinimum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
+    }
+    // 一年的月 时间轴
+    public static String [] getMonthOfYear() {
+        Calendar calendar = Calendar.getInstance();//定义日期实例
+        int year = calendar.get(Calendar.YEAR);
+        String [] date = new String[12];
+        for (int i = 1;i<= 12; i++) {
+            String dateString = year + "-" + i ;
+            if (i < 10) {
+                dateString = year + "-0" + i;
+            }
+            int index = i - 1;
+            date[index] = dateString;
+        }
+        return date;
+    }
+
+    // 每天的小时 时间轴
+    public static String[] getDayHours () {
+        String [] hours = new String[24];
+        for (int i = 0 ;i < 24; i++) {
+            String value = i + "";
+            if (i <10) {
+                value = "0" + i;
+            }
+            int index = i ;
+            hours[index] = value;
+        }
+        return hours;
+    }
+
+    // 每周的时间轴
+    public static String [] getDayOfWeek () {
+        String [] hours = new String[7];
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+        // 今天是一周中的第几天
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK );
+
+        if (c.getFirstDayOfWeek() == Calendar.SUNDAY) {
+            c.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        // 计算一周开始的日期
+        c.add(Calendar.DAY_OF_MONTH, -dayOfWeek);
+
+        for (int i = 0; i< 7; i++) {
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            hours[i] = sdf.format(c.getTime());
+        }
+        return hours;
+    }
+
+    // 每月的时间轴
+    public static String [] getDayOfMonth () {
+        Calendar aCalendar = Calendar.getInstance();
+        int year = aCalendar.get(Calendar.YEAR);//年份
+        int month = aCalendar.get(Calendar.MONTH) + 1;//月份
+        int day = aCalendar.getActualMaximum(Calendar.DATE);
+        String [] date = new String[day];
+        for (int i = 1; i <= day; i++) {
+            String monthString = "-" + month ;
+            String dayString = "-" + i ;
+            if (month < 10) {
+                monthString = "-0" + month;
+            }
+            if (i < 10 ) {
+                dayString = "-0" + i;
+            }
+            int index = i - 1;
+            date[index] = year + monthString + dayString;
+        }
+        return date;
+    }
+
+    // 获取今年
+    public static int getCurrentYear() {
+        Calendar cal = Calendar.getInstance();
+        return  cal.get(Calendar.YEAR);
+    }
+  // 获取去年
+    public static int getLastYear() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR ,-1);
+        return  cal.get(Calendar.YEAR);
+    }
+
+    // 获取上个月
+    public static int getLastMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH ,-1);
+        return  cal.get(Calendar.MONTH);
+    }
+
+    // 获取当前月
+    public static int getCurrentMonth() {
+        Calendar cal = Calendar.getInstance();
+        return  cal.get(Calendar.MONTH);
+    }
+
+    // 获取上个月的开始时间
+    public static Date getFirstDayOfLastMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        cal.set(Calendar.DAY_OF_MONTH,1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    //  获取上个月最后一天
+    public static Date getEndDayOfLastMonth () {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+
+    // 获取上一季度的开始时间
+    public static Date getStartDateOfLastQuarter(){
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.set(Calendar.MONTH, ((int) startCalendar.get(Calendar.MONTH) / 3 - 1) * 3);
+        startCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        startCalendar.set(Calendar.MINUTE, 0);
+        startCalendar.set(Calendar.SECOND, 0);
+        return startCalendar.getTime();
+    }
+
+    // 获取上一季度的结束时间
+    public static Date getEndDateOfLastQuarter(){
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.set(Calendar.MONTH, ((int) endCalendar.get(Calendar.MONTH) / 3 - 1) * 3 + 2);
+        endCalendar.set(Calendar.DAY_OF_MONTH, endCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        endCalendar.set(Calendar.MINUTE, 59);
+        endCalendar.set(Calendar.SECOND, 59);
+        return endCalendar.getTime();
+    }
+
+
+    // 获取本季度的开始时间
+    public static Date getStartDateOfQuarter(){
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.set(Calendar.MONTH, ((int) startCalendar.get(Calendar.MONTH) / 3) * 3);
+        startCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        startCalendar.set(Calendar.MINUTE, 0);
+        startCalendar.set(Calendar.SECOND, 0);
+        return startCalendar.getTime();
+    }
+
+    // 获取本季度的结束时间
+    public static Date getEndDateOfQuarter(){
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.set(Calendar.MONTH, ((int) endCalendar.get(Calendar.MONTH) / 3) * 3 + 2);
+        endCalendar.set(Calendar.DAY_OF_MONTH, endCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        endCalendar.set(Calendar.MINUTE, 59);
+        endCalendar.set(Calendar.SECOND, 59);
+        return endCalendar.getTime();
+    }
+
+    // 获取去年最后一天
+    public static Date getEndDayOfLastYear() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR,-1);
+        calendar.set(Calendar.MONTH,calendar.getActualMaximum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime();
+    }
+
+    // 获取去年的第一天
+    public static Date getFirstDayOfLastYear() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR,-1);
+        calendar.set(Calendar.MONTH,calendar.getActualMinimum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
+    }
+
 }

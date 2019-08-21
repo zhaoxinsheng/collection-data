@@ -1,5 +1,7 @@
 package io.nakong.modules.app.resolver;
 
+import io.nakong.modules.app.annotation.LoginUser;
+import io.nakong.modules.app.interceptor.AuthorizationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -9,9 +11,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import io.nakong.modules.app.annotation.LoginUser;
 import io.nakong.modules.app.entity.UserEntity;
-import io.nakong.modules.app.interceptor.AuthorizationInterceptor;
 import io.nakong.modules.app.service.UserService;
 
 /**

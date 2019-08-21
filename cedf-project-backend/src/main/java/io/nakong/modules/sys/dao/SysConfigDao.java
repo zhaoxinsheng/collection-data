@@ -17,12 +17,11 @@
 package io.nakong.modules.sys.dao;
 
 
+import io.nakong.modules.sys.entity.SysConfigEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.sys.entity.SysConfigEntity;
 
 /**
  * 系统配置信息

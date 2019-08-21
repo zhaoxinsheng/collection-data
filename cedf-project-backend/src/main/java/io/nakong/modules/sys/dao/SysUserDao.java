@@ -2,11 +2,10 @@ package io.nakong.modules.sys.dao;
 
 import java.util.List;
 
+import io.nakong.modules.sys.entity.SysUserEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.sys.entity.SysUserEntity;
 
 /**
  * 系统用户

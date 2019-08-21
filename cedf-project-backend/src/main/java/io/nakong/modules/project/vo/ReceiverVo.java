@@ -15,7 +15,7 @@ import io.nakong.modules.project.entity.ReceiverEntity;
  * @Description: (这里用一句话描述这个类的作用)
  * @date
  */
-public class ReceiverVo extends ReceiverEntity{
+public class ReceiverVo extends ReceiverEntity {
 
     private List<AreaEntity> cityList;
     private List<AreaEntity> countyList;

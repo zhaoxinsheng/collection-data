@@ -2,7 +2,7 @@
     <workbook>
         <worksheet idx="0">
             <section startRow="0" endRow="2" />
-            <loop startRow="3" endRow="3" items="receivers" var="rcv" varType="io.nakong.modules.project.vo.ReceiverVo">
+            <loop startRow="3" endRow="3" items="receivers" var="rcv" varType="ReceiverVo">
                 <section startRow="3" endRow="3">
                     <mapping row="3" col="0">rcv.projectNo                            </mapping>
                     <mapping row="3" col="1">rcv.amountType          </mapping>

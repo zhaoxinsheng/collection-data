@@ -16,11 +16,10 @@
 
 package io.nakong.modules.sys.dao;
 
+import io.nakong.modules.sys.entity.SysCaptchaEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.sys.entity.SysCaptchaEntity;
 
 /**
  * 验证码

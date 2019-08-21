@@ -16,11 +16,10 @@
 
 package io.nakong.modules.app.dao;
 
+import io.nakong.modules.app.entity.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.app.entity.UserEntity;
 
 /**
  * 用户

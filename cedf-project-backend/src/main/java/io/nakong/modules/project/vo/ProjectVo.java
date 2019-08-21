@@ -7,9 +7,8 @@ package io.nakong.modules.project.vo;/*
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import io.nakong.modules.project.entity.ProjectEntity;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author maozhengwen

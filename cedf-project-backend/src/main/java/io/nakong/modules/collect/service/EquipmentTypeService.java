@@ -1,18 +1,17 @@
 package io.nakong.modules.collect.service;
 
-import java.util.Map;
-
 import com.baomidou.mybatisplus.service.IService;
-
 import io.nakong.common.utils.PageUtils;
 import io.nakong.modules.collect.entity.EquipmentTypeEntity;
+
+import java.util.Map;
 
 /**
  * 
  *
  * @author tom
  * @email zhaoxinsheng@codyy.com
- * @date 2018-06-28 20:20:43
+ * @date 2019-05-29 21:58:32
  */
 public interface EquipmentTypeService extends IService<EquipmentTypeEntity> {
 

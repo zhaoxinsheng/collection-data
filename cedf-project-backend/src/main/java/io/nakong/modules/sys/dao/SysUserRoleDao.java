@@ -2,11 +2,10 @@ package io.nakong.modules.sys.dao;
 
 import java.util.List;
 
+import io.nakong.modules.sys.entity.SysUserRoleEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.sys.entity.SysUserRoleEntity;
 
 /**
  * 用户与角色对应关系

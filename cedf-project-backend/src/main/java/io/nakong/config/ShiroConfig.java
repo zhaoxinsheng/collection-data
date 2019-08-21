@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import io.nakong.modules.sys.oauth2.OAuth2Filter;
+import io.nakong.modules.sys.oauth2.OAuth2Realm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -16,9 +18,6 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import io.nakong.modules.sys.oauth2.OAuth2Filter;
-import io.nakong.modules.sys.oauth2.OAuth2Realm;
 
 /**
  * Shiro配置

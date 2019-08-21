@@ -17,10 +17,10 @@
 package io.nakong.modules.oss.cloud;
 
 
+import io.nakong.modules.sys.service.SysConfigService;
 import io.nakong.common.utils.ConfigConstant;
 import io.nakong.common.utils.Constant;
 import io.nakong.common.utils.SpringContextUtils;
-import io.nakong.modules.sys.service.SysConfigService;
 
 /**
  * 文件上传Factory

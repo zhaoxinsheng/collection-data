@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.collect.dao.PwPriceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="PwPriceEntity" id="pwPriceMap">
+        <result property="id" column="id"/>
+        <result property="basePrice" column="base_price"/>
+        <result property="upRate" column="up_rate"/>
+        <result property="totalUpRate" column="total_up_rate"/>
+        <result property="insertTime" column="insert_time"/>
+        <result property="costPrice" column="cost_price"/>
+    </resultMap>
+
+
+</mapper>

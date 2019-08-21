@@ -2,6 +2,7 @@ package io.nakong.modules.project.dao;
 
 import java.util.List;
 
+import io.nakong.modules.project.entity.ProjectEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +10,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 
 import io.nakong.common.utils.Query;
-import io.nakong.modules.project.entity.ProjectEntity;
 
 /**
  *

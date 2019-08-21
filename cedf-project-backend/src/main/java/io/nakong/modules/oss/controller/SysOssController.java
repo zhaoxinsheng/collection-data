@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
+import io.nakong.modules.sys.service.SysConfigService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,6 @@ import io.nakong.modules.oss.cloud.CloudStorageConfig;
 import io.nakong.modules.oss.cloud.OSSFactory;
 import io.nakong.modules.oss.entity.SysOssEntity;
 import io.nakong.modules.oss.service.SysOssService;
-import io.nakong.modules.sys.service.SysConfigService;
 
 /**
  * 文件上传

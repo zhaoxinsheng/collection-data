@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
@@ -58,7 +57,7 @@ public class ProjectController extends AbstractController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("project:base:list")
+//    @RequiresPermissions("project:base:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = null;
         try {
@@ -72,7 +71,7 @@ public class ProjectController extends AbstractController {
     }
 
 	@RequestMapping("/listall")
-	@RequiresPermissions("project:base:list")
+//	@RequiresPermissions("project:base:list")
 	public R listAll(@RequestParam Map<String, Object> params) throws Exception {
 		List<ProjectEntity> projects = null;
 		EntityWrapper wrapper = new EntityWrapper<ProjectEntity>();
@@ -86,7 +85,7 @@ public class ProjectController extends AbstractController {
      * 列表
      */
     @RequestMapping("/typeSelect")
-    @RequiresPermissions("project:base:typeSelect")
+//    @RequiresPermissions("project:base:typeSelect")
     public R typeList(@RequestParam Map<String, Object> params){
         List<ProjectTypeEntity> list = projectTypeService.selectList(new EntityWrapper<ProjectTypeEntity>());
         return R.ok().put("list", list);
@@ -98,7 +97,7 @@ public class ProjectController extends AbstractController {
      * 信息
      */
     @RequestMapping("/info/{id}")
-    @RequiresPermissions("project:base:info")
+//    @RequiresPermissions("project:base:info")
     public R info(@PathVariable("id") Integer id){
 
         try {
@@ -114,7 +113,7 @@ public class ProjectController extends AbstractController {
      * 保存
      */
     @RequestMapping("/save")
-    @RequiresPermissions("project:base:save")
+//    @RequiresPermissions("project:base:save")
     public R save(@RequestBody ProjectVo project){
         PageUtils page = null;
         try {
@@ -129,7 +128,7 @@ public class ProjectController extends AbstractController {
      * 修改
      */
     @RequestMapping("/update")
-    @RequiresPermissions("project:base:update")
+//    @RequiresPermissions("project:base:update")
     public R update(@RequestBody ProjectVo project){
         try {
         
@@ -148,7 +147,7 @@ public class ProjectController extends AbstractController {
      * 删除
      */
     @RequestMapping("/delete")
-    @RequiresPermissions("project:base:delete")
+//    @RequiresPermissions("project:base:delete")
     public R delete(@RequestBody Integer[] ids){
         try {
             projectService.deleteProject(Arrays.asList(ids));
@@ -162,7 +161,7 @@ public class ProjectController extends AbstractController {
 
 
 	@PostMapping("/import")
-	@RequiresPermissions("project:base:import")
+//	@RequiresPermissions("project:base:import")
 	public R importData(@RequestParam("file") MultipartFile file) {
 		try {
 			if (file.isEmpty()) {
@@ -232,7 +231,7 @@ public class ProjectController extends AbstractController {
      * 项目统计
      */
     @RequestMapping("/statistics")
-    @RequiresPermissions("project:base:statistics")
+//    @RequiresPermissions("project:base:statistics")
     public R statisticsData(){ 
 
         return R.ok();

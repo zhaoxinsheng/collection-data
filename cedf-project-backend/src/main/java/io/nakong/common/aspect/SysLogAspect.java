@@ -5,6 +5,10 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import io.nakong.common.annotation.SysLog;
+import io.nakong.modules.sys.entity.SysLogEntity;
+import io.nakong.modules.sys.entity.SysUserEntity;
+import io.nakong.modules.sys.service.SysLogService;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,12 +20,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
-import io.nakong.common.annotation.SysLog;
 import io.nakong.common.utils.HttpContextUtils;
 import io.nakong.common.utils.IPUtils;
-import io.nakong.modules.sys.entity.SysLogEntity;
-import io.nakong.modules.sys.entity.SysUserEntity;
-import io.nakong.modules.sys.service.SysLogService;
 
 
 /**

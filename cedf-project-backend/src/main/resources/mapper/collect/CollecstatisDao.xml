@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.collect.dao.CollecstatisDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nakong.modules.collect.entity.CollecstatisEntity" id="collecstatisMap">
+        <result property="id" column="id"/>
+        <result property="collectData" column="collect_data"/>
+        <result property="collectType" column="collect_type"/>
+        <result property="equipId" column="equip_id"/>
+        <result property="hour" column="hour"/>
+        <result property="minu" column="minu"/>
+        <result property="second" column="second"/>
+        <result property="month" column="month"/>
+        <result property="year" column="year"/>
+        <result property="weekMonth" column="week_month"/>
+        <result property="dayYear" column="day_year"/>
+        <result property="insertTime" column="insert_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+     <select id="comparisonChartByDay" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
+           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d %H ') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
+            and t.collect_type = #{compareType}
+            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+            group by date_format(t.insert_time, '%Y-%m-%d %H')
+     </select>
+
+
+    <select id="comparisonChartByWeek" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
+           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d') insert_time from   comparisonChartByWeek t where t.equip_id = #{equipId}
+            and t.collect_type = #{compareType}
+            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+            group by date_format(t.insert_time, '%Y-%m-%d')
+     </select>
+
+    <select id="comparisonChartByMonth" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
+           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
+            and t.collect_type = #{compareType}
+            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+            group by date_format(t.insert_time, '%Y-%m-%d')
+     </select>
+
+    <select id="comparisonChartByYear" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
+           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
+            and t.collect_type = #{compareType}
+            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+            group by date_format(t.insert_time, '%Y-%m')
+     </select>
+
+
+</mapper>

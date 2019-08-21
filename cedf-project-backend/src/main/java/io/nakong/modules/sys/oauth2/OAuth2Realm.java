@@ -2,6 +2,7 @@ package io.nakong.modules.sys.oauth2;
 
 import java.util.Set;
 
+import io.nakong.modules.sys.service.ShiroService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import io.nakong.modules.sys.entity.SysUserEntity;
 import io.nakong.modules.sys.entity.SysUserTokenEntity;
-import io.nakong.modules.sys.service.ShiroService;
 
 /**
  * 认证

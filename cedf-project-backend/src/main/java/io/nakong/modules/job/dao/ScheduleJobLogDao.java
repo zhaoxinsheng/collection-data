@@ -16,11 +16,10 @@
 
 package io.nakong.modules.job.dao;
 
+import io.nakong.modules.job.entity.ScheduleJobLogEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.job.entity.ScheduleJobLogEntity;
 
 /**
  * 定时任务日志

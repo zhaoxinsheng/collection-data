@@ -17,11 +17,10 @@
 package io.nakong.modules.sys.dao;
 
 
+import io.nakong.modules.sys.entity.SysLogEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.sys.entity.SysLogEntity;
 
 /**
  * 系统日志

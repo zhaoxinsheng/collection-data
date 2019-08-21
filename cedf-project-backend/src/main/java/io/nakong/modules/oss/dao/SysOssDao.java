@@ -16,11 +16,10 @@
 
 package io.nakong.modules.oss.dao;
 
+import io.nakong.modules.oss.entity.SysOssEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.oss.entity.SysOssEntity;
 
 /**
  * 文件上传

@@ -18,6 +18,7 @@ package io.nakong.modules.oss.service.impl;
 
 import java.util.Map;
 
+import io.nakong.modules.oss.service.SysOssService;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.plugins.Page;
@@ -27,7 +28,6 @@ import io.nakong.common.utils.PageUtils;
 import io.nakong.common.utils.Query;
 import io.nakong.modules.oss.dao.SysOssDao;
 import io.nakong.modules.oss.entity.SysOssEntity;
-import io.nakong.modules.oss.service.SysOssService;
 
 
 @Service("sysOssService")

@@ -2,11 +2,10 @@ package io.nakong.modules.sys.dao;
 
 import java.util.List;
 
+import io.nakong.modules.sys.entity.SysRoleMenuEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.sys.entity.SysRoleMenuEntity;
 
 /**
  * 角色与菜单对应关系

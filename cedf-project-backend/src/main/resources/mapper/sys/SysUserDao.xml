@@ -17,7 +17,7 @@
 		where ur.user_id = #{userId}
 	</select>
 	
-	<select id="queryByUserName" resultType="io.nakong.modules.sys.entity.SysUserEntity">
+	<select id="queryByUserName" resultType="SysUserEntity">
 		select * from sys_user where username = #{username}
 	</select>
 

@@ -17,12 +17,12 @@
 package io.nakong.modules.sys.redis;
 
 
+import io.nakong.modules.sys.entity.SysConfigEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.nakong.common.utils.RedisKeys;
 import io.nakong.common.utils.RedisUtils;
-import io.nakong.modules.sys.entity.SysConfigEntity;
 
 /**
  * 系统配置Redis

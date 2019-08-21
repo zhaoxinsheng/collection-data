@@ -18,11 +18,10 @@ package io.nakong.modules.job.dao;
 
 import java.util.Map;
 
+import io.nakong.modules.job.entity.ScheduleJobEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.job.entity.ScheduleJobEntity;
 
 /**
  * 定时任务

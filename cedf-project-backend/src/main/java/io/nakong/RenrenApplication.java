@@ -1,13 +1,12 @@
 package io.nakong;
 
+import io.nakong.datasources.DynamicDataSourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Import;
-
-import io.nakong.datasources.DynamicDataSourceConfig;
 
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})

@@ -1,6 +1,7 @@
 package io.nakong.modules.app.controller;
 
 
+import io.nakong.modules.app.annotation.LoginUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.nakong.common.utils.R;
 import io.nakong.modules.app.annotation.Login;
-import io.nakong.modules.app.annotation.LoginUser;
 import io.nakong.modules.app.entity.UserEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

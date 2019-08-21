@@ -1,11 +1,10 @@
 package io.nakong.modules.project.dao;
 
+import io.nakong.modules.project.entity.ReceiverEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.project.entity.ReceiverEntity;
 
 /**
  *

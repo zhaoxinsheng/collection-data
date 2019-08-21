@@ -1,8 +1,7 @@
 package io.nakong.common.xss;
 
-import org.apache.commons.lang.StringUtils;
-
 import io.nakong.common.exception.RRException;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * SQL过滤

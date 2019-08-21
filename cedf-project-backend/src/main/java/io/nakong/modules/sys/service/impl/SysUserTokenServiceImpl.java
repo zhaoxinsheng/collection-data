@@ -30,6 +30,7 @@ public class SysUserTokenServiceImpl extends ServiceImpl<SysUserTokenDao, SysUse
 		Date expireTime = new Date(now.getTime() + EXPIRE * 1000);
 
 		//判断是否生成过token
+		R r = R.ok().put("token", token).put("expire", EXPIRE);
 		SysUserTokenEntity tokenEntity = this.selectById(userId);
 		if(tokenEntity == null){
 			tokenEntity = new SysUserTokenEntity();
@@ -41,15 +42,17 @@ public class SysUserTokenServiceImpl extends ServiceImpl<SysUserTokenDao, SysUse
 			//保存token
 			this.insert(tokenEntity);
 		}else{
-			tokenEntity.setToken(token);
+//			tokenEntity.setToken(token);
+			tokenEntity.setToken(tokenEntity.getToken());
 			tokenEntity.setUpdateTime(now);
 			tokenEntity.setExpireTime(expireTime);
 
 			//更新token
 			this.updateById(tokenEntity);
+			r = R.ok().put("token", tokenEntity.getToken()).put("expire", EXPIRE);
 		}
 
-		R r = R.ok().put("token", token).put("expire", EXPIRE);
+		
 
 		return r;
 	}

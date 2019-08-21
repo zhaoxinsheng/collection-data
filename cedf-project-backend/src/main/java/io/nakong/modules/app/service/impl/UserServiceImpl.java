@@ -1,6 +1,7 @@
 package io.nakong.modules.app.service.impl;
 
 
+import io.nakong.modules.app.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,6 @@ import io.nakong.common.validator.Assert;
 import io.nakong.modules.app.dao.UserDao;
 import io.nakong.modules.app.entity.UserEntity;
 import io.nakong.modules.app.form.LoginForm;
-import io.nakong.modules.app.service.UserService;
 
 
 @Service("userService")

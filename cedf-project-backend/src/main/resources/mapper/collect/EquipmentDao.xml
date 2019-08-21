@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.collect.dao.EquipmentDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="EquipmentEntity" id="equipmentMap">
+        <result property="id" column="id"/>
+        <result property="model" column="model"/>
+        <result property="name" column="name"/>
+        <result property="vendor" column="vendor"/>
+        <result property="type" column="type"/>
+        <result property="no" column="no"/>
+        <result property="productDate" column="product_date"/>
+        <result property="collecUnit" column="collec_unit"/>
+        <result property="collecType" column="collec_type"/>
+        <result property="insertDate" column="insert_date"/>
+        <result property="color" column="color"/>
+        <result property="varname" column="varname"/>
+    </resultMap>
+</mapper>

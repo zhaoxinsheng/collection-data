@@ -1,95 +1,176 @@
 package io.nakong.modules.collect.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 
  * 
  * @author tom
  * @email zhaoxinsheng@codyy.com
- * @date 2018-06-28 20:20:43
+ * @date 2019-05-29 21:58:32
  */
-@TableName("tb_tips")
+@TableName("t_tips")
 public class TipsEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 主键
+	 * 
 	 */
 	@TableId
-	private Integer id;
+	private String id;
 	/**
-	 * 采集类型
+	 * 
 	 */
-	private Integer collectTypeId;
+	private String equipType;
 	/**
-	 * 提醒项说明信息
+	 * 
 	 */
-	private String tipDesc;
+	private String tipsMsg;
 	/**
-	 * 提醒频率
+	 * 
 	 */
-	private String tipQuartz;
+	private Integer status;
+	/**
+	 * 
+	 */
+	private String startTime;
+	/**
+	 * 
+	 */
+	private String endTime;
 	/**
 	 * 
 	 */
 	private Date insertTime;
-	/**
-	 * 
-	 */
-	private String insertUser;
 
-	/**
-	 * 设置：主键
+
+	private  Integer  miniValue;
+
+	private Integer  maxValue;
+
+	private Integer  period;
+
+	private Integer periodType;
+
+	@TableField(exist = false)
+	private String periodTypeName;
+
+	public String getPeriodTypeName() {
+		return periodTypeName;
+	}
+
+	public void setPeriodTypeName(String periodTypeName) {
+		this.periodTypeName = periodTypeName;
+	}
+
+	public Integer getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Integer period) {
+        this.period = period;
+    }
+
+    public Integer getPeriodType() {
+        return periodType;
+    }
+
+    public void setPeriodType(Integer periodType) {
+        this.periodType = periodType;
+    }
+
+    public Integer getMiniValue() {
+        return miniValue;
+    }
+
+    public void setMiniValue(Integer miniValue) {
+        this.miniValue = miniValue;
+    }
+
+    public Integer getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(Integer maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    /**
+	 * 设置：
 	 */
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	/**
-	 * 获取：主键
+	 * 获取：
 	 */
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 	/**
-	 * 设置：采集类型
+	 * 设置：
 	 */
-	public void setCollectTypeId(Integer collectTypeId) {
-		this.collectTypeId = collectTypeId;
+	public void setEquipType(String equipType) {
+		this.equipType = equipType;
 	}
 	/**
-	 * 获取：采集类型
+	 * 获取：
 	 */
-	public Integer getCollectTypeId() {
-		return collectTypeId;
+	public String getEquipType() {
+		return equipType;
 	}
 	/**
-	 * 设置：提醒项说明信息
+	 * 设置：
 	 */
-	public void setTipDesc(String tipDesc) {
-		this.tipDesc = tipDesc;
+	public void setTipsMsg(String tipsMsg) {
+		this.tipsMsg = tipsMsg;
 	}
 	/**
-	 * 获取：提醒项说明信息
+	 * 获取：
 	 */
-	public String getTipDesc() {
-		return tipDesc;
+	public String getTipsMsg() {
+		return tipsMsg;
 	}
 	/**
-	 * 设置：提醒频率
+	 * 设置：
 	 */
-	public void setTipQuartz(String tipQuartz) {
-		this.tipQuartz = tipQuartz;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	/**
-	 * 获取：提醒频率
+	 * 获取：
 	 */
-	public String getTipQuartz() {
-		return tipQuartz;
+	public Integer getStatus() {
+		return status;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getStartTime() {
+		return startTime;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getEndTime() {
+		return endTime;
 	}
 	/**
 	 * 设置：
@@ -102,17 +183,5 @@ public class TipsEntity implements Serializable {
 	 */
 	public Date getInsertTime() {
 		return insertTime;
-	}
-	/**
-	 * 设置：
-	 */
-	public void setInsertUser(String insertUser) {
-		this.insertUser = insertUser;
-	}
-	/**
-	 * 获取：
-	 */
-	public String getInsertUser() {
-		return insertUser;
 	}
 }

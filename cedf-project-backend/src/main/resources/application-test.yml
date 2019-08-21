@@ -5,14 +5,14 @@ spring:
         druid:
             first:  #数据源1
                 #url: jdbc:mysql://rm-m5eaqfm7sa0jk46nl.mysql.rds.aliyuncs.com/renren_fast?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-                url: jdbc:mysql://:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-                username: renren
-                password: Renren2018
+                url: jdbc:mysql://localhost:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+                username: root
+                password: root
             second:  #数据源2
                 #url: jdbc:mysql://rm-m5eaqfm7sa0jk46nl.mysql.rds.aliyuncs.com/renren_fast?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
                 url: jdbc:mysql://localhost:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
-                username: renren
-                password: Renren2018
+                username: root
+                password: root
             initial-size: 10
             max-active: 100
             min-idle: 10

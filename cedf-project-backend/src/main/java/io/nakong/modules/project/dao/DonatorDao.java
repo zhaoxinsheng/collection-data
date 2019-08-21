@@ -1,10 +1,9 @@
 package io.nakong.modules.project.dao;
 
+import io.nakong.modules.project.entity.DonatorEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.nakong.modules.project.entity.DonatorEntity;
 
 /**
  * 

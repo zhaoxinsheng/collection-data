@@ -5,13 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.Date;
 
-import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.digester3.Digester;
 import org.jxls.reader.BeanCellMapping;
-import org.jxls.reader.ConvertUtilsBeanProvider;
 import org.jxls.reader.OffsetCellCheck;
 import org.jxls.reader.OffsetCellCheckImpl;
 import org.jxls.reader.OffsetRowCheck;
@@ -55,7 +51,7 @@ public class ReaderBuilder {
         digester.addObjectCreate("*/loop", "org.jxls.reader.XLSForEachBlockReaderImpl");
         digester.addSetProperties("*/loop");
         digester.addSetNext("*/loop", "addBlockReader");
-        digester.addObjectCreate("*/section", "io.nakong.common.excel.MySimpleBlockReaderImpl");
+        digester.addObjectCreate("*/section", "MySimpleBlockReaderImpl");
         digester.addSetProperties("*/section");
         digester.addSetNext("*/section", "addBlockReader");
         digester.addObjectCreate("*/mapping", "org.jxls.reader.BeanCellMapping");
