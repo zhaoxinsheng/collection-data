@@ -71,8 +71,13 @@ public class PwPriceController {
     @RequestMapping("/update")
     @RequiresPermissions("collect:pwprice:update")
     public R update(@RequestBody PwPriceEntity pwPrice){
-			pwPriceService.updateById(pwPrice);
 
+        PwPriceEntity  oldPrice = pwPriceService.selectById(pwPrice.getId());
+          if (oldPrice == null) {
+              pwPriceService.insert(pwPrice);
+          } else {
+              pwPriceService.updateById(pwPrice);
+          }
         return R.ok();
     }
 

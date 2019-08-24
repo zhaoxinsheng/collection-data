@@ -4,7 +4,7 @@
 <mapper namespace="io.nakong.modules.collect.dao.EquipmentDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="EquipmentEntity" id="equipmentMap">
+    <resultMap type="io.nakong.modules.collect.entity.EquipmentEntity" id="equipmentMap">
         <result property="id" column="id"/>
         <result property="model" column="model"/>
         <result property="name" column="name"/>
@@ -17,5 +17,12 @@
         <result property="insertDate" column="insert_date"/>
         <result property="color" column="color"/>
         <result property="varname" column="varname"/>
+        <result property="category" column="category"/>
     </resultMap>
+
+    <insert id="insertReturnId" useGeneratedKeys="true" keyProperty="id" parameterType="io.nakong.modules.collect.entity.EquipmentEntity">
+            insert into t_equipment(model,name,vendor,type,no,product_date,collec_unit,collec_type,insert_date)
+            values(#{model},#{name},#{vendor},#{type},#{no},#{productDate},#{collecUnit},#{collecType},now())
+  </insert>
+
 </mapper>

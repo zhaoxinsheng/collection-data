@@ -14,5 +14,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface EquipmentDao extends BaseMapper<EquipmentEntity> {
-	
+
+    public int insertReturnId(EquipmentEntity entity);
 }

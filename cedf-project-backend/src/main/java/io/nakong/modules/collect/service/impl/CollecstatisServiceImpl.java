@@ -1,5 +1,6 @@
 package io.nakong.modules.collect.service.impl;
 
+import io.nakong.modules.collect.entity.CompareDataEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +50,99 @@ public class CollecstatisServiceImpl extends ServiceImpl<CollecstatisDao, Collec
     @Override
     public List<CollecstatisEntity>   comparisonChartByYear(Integer compareType, String equipId, Date startDate, Date endDate) {
         return collecstatisDao.comparisonChartByYear(compareType, equipId, startDate, endDate);
+    }
+    @Override
+   public  CompareDataEntity getCollectData(Date startDate, Date endDate, Integer collectType) {
+       return  collecstatisDao.getCollectData(startDate, endDate, collectType);
+   }
+
+    @Override
+    public List<CompareDataEntity> getAirCollectData(Date startDate, Date endDate) {
+        return collecstatisDao.getAirCollectData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> getAirPowerCollectData(Date startDate, Date endDate) {
+        return collecstatisDao.getAirPowerCollectData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> getPowerCollectData(Date startDate, Date endDate) {
+        return collecstatisDao.getPowerCollectData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> alarmData(Date startDate, Date endDate) {
+        return collecstatisDao.alarmData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> getSumAirData(Date startDate, Date endDate) {
+       return   collecstatisDao.getSumAirData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> sumPowerData(Date startDate, Date endDate) {
+        return   collecstatisDao.sumPowerData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> sumPipeData(Date startDate, Date endDate) {
+        return   collecstatisDao.sumPipeData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> sumTempData(Date startDate, Date endDate) {
+        return   collecstatisDao.sumTempData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> airPowerRate(Date startDate, Date endDate) {
+        return   collecstatisDao.airPowerRate(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> pressData(Date startDate, Date endDate) {
+        return   collecstatisDao.pressData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> pipeData(Date startDate, Date endDate) {
+        return   collecstatisDao.pipeData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> powerData(Date startDate, Date endDate) {
+        return   collecstatisDao.powerData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> ldData(Date startDate, Date endDate) {
+        return   collecstatisDao.ldData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> tempData(Date startDate, Date endDate) {
+        return   collecstatisDao.tempData(startDate, endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> airCostChartByDay(Integer compareType,  String[] equidArray, Date startDate, Date endDate) {
+        return   collecstatisDao.airCostChartByDay(compareType,equidArray,startDate,endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> airCostChartByWeek(Integer compareType,  String[] equidArray , Date startDate, Date endDate) {
+        return  collecstatisDao.airCostByWeek(compareType,equidArray,startDate,endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> airCostChartByMonth(Integer compareType, String[] equidArray, Date startDate, Date endDate) {
+        return  collecstatisDao.airCostByMonth(compareType,equidArray,startDate,endDate);
+    }
+
+    @Override
+    public List<CompareDataEntity> airCostChartByYear(Integer compareType,  String[] equidArray, Date startDate, Date endDate) {
+        return  collecstatisDao.airCostByYear(compareType,equidArray,startDate,endDate);
     }
 }

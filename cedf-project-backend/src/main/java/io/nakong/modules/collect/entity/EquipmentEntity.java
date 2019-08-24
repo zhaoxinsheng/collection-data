@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -55,6 +56,27 @@ public class EquipmentEntity implements Serializable {
 	 * 
 	 */
 	private Integer collecType;
+
+	private Integer category;
+
+	@TableField(exist = false)
+	private List<EquipColorEntity> detail;
+
+	public List<EquipColorEntity> getDetail() {
+		return detail;
+	}
+
+	public void setDetail(List<EquipColorEntity> detail) {
+		this.detail = detail;
+	}
+
+	public Integer getCategory() {
+		return category;
+	}
+
+	public void setCategory(Integer category) {
+		this.category = category;
+	}
 
 	public String getCollecTypeName() {
 		return collecTypeName;

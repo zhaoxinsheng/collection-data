@@ -1,6 +1,7 @@
 package io.nakong.modules.collect.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 实现该接口的类，将获取应用配置信息实例
@@ -14,6 +15,15 @@ public class DataEntity implements Serializable {
     public Integer[] data;
     public String name;
     public String color;
+    public Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public String getName() {
         return name;

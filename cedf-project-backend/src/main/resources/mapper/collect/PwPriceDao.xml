@@ -4,7 +4,7 @@
 <mapper namespace="io.nakong.modules.collect.dao.PwPriceDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="PwPriceEntity" id="pwPriceMap">
+    <resultMap type="io.nakong.modules.collect.entity.PwPriceEntity" id="pwPriceMap">
         <result property="id" column="id"/>
         <result property="basePrice" column="base_price"/>
         <result property="upRate" column="up_rate"/>
@@ -13,5 +13,15 @@
         <result property="costPrice" column="cost_price"/>
     </resultMap>
 
+
+    <select id="getBasePriceByDatePriod" resultType="io.nakong.modules.collect.entity.PwPriceEntity">
+          select sum(base_price)/count(1) basePrice,
+        date_format(t.insert_time, '%Y-%m-%d') insertTime
+        from   t_pw_price t
+        where 1 =1
+        and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d'),equip_id
+
+    </select>
 
 </mapper>

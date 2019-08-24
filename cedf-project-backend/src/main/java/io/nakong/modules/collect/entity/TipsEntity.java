@@ -26,7 +26,7 @@ public class TipsEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private String equipType;
+	private String collectType;
 	/**
 	 * 
 	 */
@@ -112,18 +112,15 @@ public class TipsEntity implements Serializable {
 	public String getId() {
 		return id;
 	}
-	/**
-	 * 设置：
-	 */
-	public void setEquipType(String equipType) {
-		this.equipType = equipType;
+
+	public String getCollectType() {
+		return collectType;
 	}
-	/**
-	 * 获取：
-	 */
-	public String getEquipType() {
-		return equipType;
+
+	public void setCollectType(String collectType) {
+		this.collectType = collectType;
 	}
+
 	/**
 	 * 设置：
 	 */

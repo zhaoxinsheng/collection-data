@@ -29,7 +29,7 @@
 
 
     <select id="comparisonChartByWeek" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
-           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d') insert_time from   comparisonChartByWeek t where t.equip_id = #{equipId}
+           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
             and t.collect_type = #{compareType}
             and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
             group by date_format(t.insert_time, '%Y-%m-%d')
@@ -49,5 +49,172 @@
             group by date_format(t.insert_time, '%Y-%m')
      </select>
 
+    <select id="getCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+           select sum(collect_data)  data  from   t_collect_statis_day t where
+            and t.collect_type = #{collectType}
+            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+     </select>
 
+    <select id="getAirCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+          SELECT sum(t.collec_value) data,equip_id  FROM  t_pipe  t
+            where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+            group by t.equip_id
+    </select>
+
+
+    <select id="getAirPowerCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+          select  sum(tp.collec_value) data, sum(t.collec_value) powerData,t.equip_id
+            from t_power t ,t_pipe tp where t.equip_id = tp.equip_id
+              and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+            group by  t.equip_id
+    </select>
+
+    <select id="getPowerCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select  sum(t.collec_value) powerData,t.equip_id
+        from t_power t  where 1=1
+          and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by  t.equip_id
+    </select>
+
+    <select id="getSumAirData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') date,t.equip_id equipId,sum(t.collec_value) data
+        from t_pipe t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+    </select>
+
+    <select id="sumPowerData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') date,t.equip_id equipId,sum(t.collec_value) data
+        from t_power t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+    </select>
+
+    <select id="sumPipeData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') date,t.equip_id equipId,sum(t.collec_value) data
+        from t_pipe t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+    </select>
+
+    <select id="sumTempData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') date,t.equip_id equipId,sum(t.collec_value) data
+        from  t_temp t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+    </select>
+
+    <select id="alarmData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') date,t.equip_id equipId,sum(t.collec_value) data
+        from  t_alarm t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+    </select>
+
+    <select id="airPowerRate" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   t.equip_id equipId,sum(t.collec_value) data,sum(tp.collec_value) powerData
+        from  t_pipe t ,t_power tp
+        where t.equip_id = tp.equip_id and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by  t.equip_id
+    </select>
+
+    <select id="pressData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+        from  t_press t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+    </select>
+
+    <select id="pipeData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+        from  t_pipe t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+    </select>
+    <select id="powerData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+        from  t_power t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+    </select>
+    <select id="ldData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+        from  t_press_ld t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+    </select>
+    <select id="tempData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+        from  t_temp t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+    </select>
+
+<!-- 空气成本 excel  -->
+
+    <select id="airCostChartByDay" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) powerData,
+        sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) data,
+        date_format(t.insert_time, '%Y-%m-%d %H ') insert_time,equip_id equipId
+        from   t_collect_statis_day t
+        where
+        t.equip_id in
+        <foreach item="equipId" collection="array" open="(" separator="," close=")">
+            #{equipId}
+        </foreach>
+        and t.collect_type in (2,3)
+        and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d %H'),equip_id
+     </select>
+
+
+    <select id="airCostByWeek" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+
+        select sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) powerData,
+        sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) data,
+        date_format(t.insert_time, '%Y-%m-%d') insert_time,equip_id equipId
+        from   t_collect_statis_day t
+        where
+        t.equip_id in
+        <foreach item="equipId" collection="array" open="(" separator="," close=")">
+            #{equipId}
+        </foreach>
+        and t.collect_type in (2,3)
+        and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d'),equip_id
+
+     </select>
+
+    <select id="airCostByMonth" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+
+        select sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) powerData,
+        sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) data,
+        date_format(t.insert_time, '%Y-%m-%d') insert_time,equip_id equipId
+        from   t_collect_statis_day t
+        where
+        t.equip_id in
+        <foreach item="equipId" collection="array" open="(" separator="," close=")">
+            #{equipId}
+        </foreach>
+        and t.collect_type in (2,3)
+        and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m-%d'),equip_id
+
+     </select>
+
+    <select id="airCostChartByYear" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+
+        select sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) powerData,
+        sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) data,
+        group by date_format(t.insert_time, '%Y-%m') date_format(t.insert_time, '%Y-%m-%d') insert_time,equip_id equipId
+        from   t_collect_statis_day t
+        where
+        t.equip_id in
+        <foreach item="equipId" collection="array" open="(" separator="," close=")">
+            #{equipId}
+        </foreach>
+        and t.collect_type in (2,3)
+        and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        group by date_format(t.insert_time, '%Y-%m'),equip_id
+     </select>
 </mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.collect.dao.AirCostDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nakong.modules.collect.entity.AirCostEntity" id="airCostMap">
+        <result property="id" column="id"/>
+        <result property="unitCost" column="unit_cost"/>
+        <result property="actPipe" column="act_pipe"/>
+        <result property="inDust" column="in_dust"/>
+        <result property="inOil" column="in_oil"/>
+        <result property="outTemp" column="out_temp"/>
+        <result property="inTemp" column="in_temp"/>
+        <result property="ldTemp" column="ld_temp"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+</mapper>

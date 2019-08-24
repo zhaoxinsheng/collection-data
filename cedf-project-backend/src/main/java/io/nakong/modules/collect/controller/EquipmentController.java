@@ -5,8 +5,10 @@ import java.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import io.nakong.modules.collect.entity.EquipColorEntity;
 import io.nakong.modules.collect.entity.EquipmentEntity;
 import io.nakong.modules.collect.entity.EquipmentTypeEntity;
+import io.nakong.modules.collect.service.EquipColorService;
 import io.nakong.modules.collect.service.EquipmentTypeService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,6 +39,9 @@ public class EquipmentController {
     private EquipmentService equipmentService;
 
     @Autowired
+    private EquipColorService equipColorService;
+
+    @Autowired
     private EquipmentTypeService equipmentTypeService;
 
     /**
@@ -59,7 +64,6 @@ public class EquipmentController {
         String type = (String)params.get("type");
         EntityWrapper wrapper = new EntityWrapper<EquipmentEntity>();
         wrapper.eq(true,"type",1);
-        wrapper.orderBy("sort", true);
         return R.ok().put("data", wrapJsonArray(equipmentTypeService.selectList(wrapper)));
     }
 
@@ -72,8 +76,8 @@ public class EquipmentController {
     public R equiplist(@RequestParam Map<String, Object> params){
         String collecType = (String)params.get("collecType");
         EntityWrapper wrapper = new EntityWrapper<EquipmentEntity>();
-        wrapper.eq(true,"type",collecType);
-        wrapper.orderBy("sort", true);
+        wrapper.eq(true,"collec_type",collecType);
+        wrapper.orderBy("insert_date", true);
         return R.ok().put("data", wrapEquipJsonArray(equipmentService.selectList(wrapper)));
     }
 
@@ -86,7 +90,6 @@ public class EquipmentController {
       //  String type = (String)params.get("type");
         EntityWrapper wrapper = new EntityWrapper<EquipmentTypeEntity>();
         wrapper.eq(true,"type",2);
-        wrapper.orderBy("sort", true);
         return R.ok().put("data", wrapUnitJsonArray(equipmentTypeService.selectList(wrapper)));
     }
 
@@ -150,8 +153,15 @@ public class EquipmentController {
     @RequiresPermissions("collect:equipment:save")
     public R save(@RequestBody EquipmentEntity equipment){
        // equipment.setId(UUID.randomUUID().toString().replaceAll("-",""));
-	    equipmentService.insert(equipment);
+	   int equipId =  equipmentService.insertReturnId(equipment);
 
+        if( CollectionUtils.isNotEmpty(equipment.getDetail()) ) {
+            equipment.getDetail().stream().map(x->{
+                x.setEquipId(equipId);
+                return x;
+            });
+            equipColorService.insertBatch(equipment.getDetail());
+        }
         return R.ok();
     }
 
@@ -162,6 +172,24 @@ public class EquipmentController {
     @RequiresPermissions("collect:equipment:update")
     public R update(@RequestBody EquipmentEntity equipment){
 			equipmentService.updateById(equipment);
+
+			if (equipment != null) {
+                int equipId = equipment.getId();
+                List<EquipColorEntity> detail = equipment.getDetail();
+                if (CollectionUtils.isNotEmpty(detail)) {
+                    Map<String ,Object> param = new HashMap<>();
+                    param.put("equip_id",equipId);
+                    equipColorService.deleteByMap(param);
+                }
+
+                if( CollectionUtils.isNotEmpty(equipment.getDetail()) ) {
+                    equipment.getDetail().stream().map(x->{
+                        x.setEquipId(equipId);
+                        return x;
+                    });
+                    equipColorService.insertBatch(equipment.getDetail());
+                }
+            }
 
         return R.ok();
     }

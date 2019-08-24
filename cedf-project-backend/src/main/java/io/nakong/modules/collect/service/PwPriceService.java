@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.nakong.modules.collect.entity.PwPriceEntity;
 import io.nakong.common.utils.PageUtils;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface PwPriceService extends IService<PwPriceEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PwPriceEntity   getBasePriceByDatePriod(Date startDate, Date endDate);
 }
 

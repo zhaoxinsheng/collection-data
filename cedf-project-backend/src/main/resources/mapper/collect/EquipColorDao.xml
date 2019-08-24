@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.collect.dao.EquipColorDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nakong.modules.collect.entity.EquipColorEntity" id="equipColorMap">
+        <result property="id" column="id"/>
+        <result property="equipId" column="equip_id"/>
+        <result property="color" column="color"/>
+        <result property="collectType" column="collect_type"/>
+        <result property="unit" column="unit"/>
+        <result property="insertTime" column="insert_time"/>
+    </resultMap>
+    <select id="queryByCollectType" resultType="io.nakong.modules.collect.entity.EquipColorEntity">
+            select * from t_equip_color t where t.equip_id=#{equipId} and t.collect_type=#{collectType} limit 1
+     </select>
+
+</mapper>

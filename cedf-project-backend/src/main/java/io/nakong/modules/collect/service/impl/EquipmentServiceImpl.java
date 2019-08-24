@@ -24,6 +24,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentDao, EquipmentEnt
     @Autowired
     private EquipmentTypeService equipmentTypeService;
 
+    @Autowired
+    EquipmentDao equipmentDao;
+
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         String name = (String)params.get("name");
@@ -45,4 +48,8 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentDao, EquipmentEnt
         return new PageUtils(page);
     }
 
+    @Override
+    public int insertReturnId(EquipmentEntity entity){
+        return equipmentDao.insertReturnId(entity);
+    }
 }
