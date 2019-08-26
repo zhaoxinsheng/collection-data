@@ -43,14 +43,15 @@
      </select>
 
     <select id="comparisonChartByYear" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
-           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
+           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m') insert_time
+            from   t_collect_statis_day t where t.equip_id = #{equipId}
             and t.collect_type = #{compareType}
             and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
             group by date_format(t.insert_time, '%Y-%m')
      </select>
 
     <select id="getCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-           select sum(collect_data)  data  from   t_collect_statis_day t where
+           select sum(collect_data)  data  from   t_collect_statis_day t where 1=1
             and t.collect_type = #{collectType}
             and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
      </select>

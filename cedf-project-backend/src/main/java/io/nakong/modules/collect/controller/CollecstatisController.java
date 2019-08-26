@@ -46,7 +46,7 @@ public class CollecstatisController {
     /**
      * 对比曲线
      */
-    @RequestMapping("/comparisonchart/{collectType}/{equipIds}/{dateType}")
+    @RequestMapping("/comparisonmutichart/dbqx/{collectType}/{equipIds}/{dateType}")
     public R comparisonChart(@PathVariable("collectType") Integer collectType,@PathVariable("equipIds") String  equipIds,@PathVariable("dateType") Integer dateType){
 
         // dateType(1 当天 2 本周 3 本月 4 本年）
@@ -62,12 +62,14 @@ public class CollecstatisController {
         return R.ok().put("data", dataX).put("xais",dateArray).put("unitName",unitName);
     }
 
-    /**
+    /** 系统环比曲线
+     *
      *  1 同比去年 2 同比上月 3 同步上一季度
      *
      */
-    @RequestMapping("/comparisonmutichart/{compareType}/{collecType}")
+    @RequestMapping("/comparisonmutichart/xthb/{compareType}/{collectType}")
     public R comparisonMutichart(@PathVariable("compareType") Integer compareType,@PathVariable("collectType") Integer collectType){
+
 
         // collectType 1 压力 Pa  2 电量  kW·h 3 流量 m³ 4 温度 ℃
         String unitName = getUnitName(collectType);
@@ -98,12 +100,14 @@ public class CollecstatisController {
      *   用气量图
      *
      */
-    @RequestMapping("/comparisonmutichart/{compareType}/{startDate}/{endDate}")
-    public R airchart(@PathVariable("compareType") Integer compareType,@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    @RequestMapping("/comparisonmutichart/yql/{startDate}/{endDate}")
+    public R airchart(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
 
         String unitName = getUnitName(3);
-       List<CompareDataEntity>   entitys = collecstatisService.getAirCollectData(startDate,endDate);
-        return R.ok().put("data", getCompareDataEntities(entitys)).put("unitName",unitName);
+        Date startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
+        Date endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
+       List<CompareDataEntity>   entities = collecstatisService.getAirCollectData(startDate,endDate);
+        return R.ok().put("data", getCompareDataEntities(entities)).put("unitName",unitName);
     }
 
     /**
@@ -111,11 +115,13 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/airpower/{startDate}/{endDate}")
-    public R airpowerchart(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R airpowerchart(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
 
+        Date startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
+        Date endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
         String unitName = getUnitName(3);
-        List<CompareDataEntity>   entitys = collecstatisService.getAirPowerCollectData(startDate,endDate);
-        return R.ok().put("data", getCompareDataEntities(entitys)).put("unitName",unitName);
+        List<CompareDataEntity>   entities = collecstatisService.getAirPowerCollectData(startDate,endDate);
+        return R.ok().put("data", getCompareDataEntities(entities)).put("unitName",unitName);
     }
 
     /**
@@ -123,11 +129,13 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/power/{startDate}/{endDate}")
-    public R powerchart(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R powerchart(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
 
         String unitName = getUnitName(2);
-        List<CompareDataEntity>   entitys = collecstatisService.getPowerCollectData(startDate,endDate);
-        return R.ok().put("data", getCompareDataEntities(entitys)).put("unitName",unitName);
+        Date startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
+        Date endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
+        List<CompareDataEntity>   entities = collecstatisService.getPowerCollectData(startDate,endDate);
+        return R.ok().put("data", getCompareDataEntities(entities)).put("unitName",unitName);
     }
 
 
@@ -135,9 +143,18 @@ public class CollecstatisController {
      *   累计流量报表
      *
      */
-    @RequestMapping("/comparisonmutichart/airData/{startDate}/{endDate}")
-    public R sumAirData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    @RequestMapping("/comparisonmutichart/airData/{dateType}/{startDate}/{endDate}")
+    public R sumAirData(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(3);
+        Date startDate = new Date();
+        Date endDate = new Date();
+
+        if (dateType == 0){
+             startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
+             endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
+        } else {
+            getDateByCondition(dateType,startDate,endDate);
+        }
         List<CompareDataEntity>   entitys = collecstatisService.getSumAirData(startDate,endDate);
         List<AirDataEntity> dataRet = new ArrayList<>();
         if (entitys != null) {
@@ -150,13 +167,18 @@ public class CollecstatisController {
      *   能耗报表
      *
      */
-    @RequestMapping("/comparisonmutichart/powerData/{startDate}/{endDate}")
-    public R sumPowerData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    @RequestMapping("/comparisonmutichart/powerData/{dateType}/{startDate}/{endDate}")
+    public R sumPowerData(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(2);
-        List<CompareDataEntity>   entitys = collecstatisService.sumPowerData(startDate,endDate);
+
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
+
+        List<CompareDataEntity>   entities = collecstatisService.sumPowerData(startDate,endDate);
         List<AirDataEntity> dataRet = new ArrayList<>();
-        if (entitys != null) {
-            dataRet = getDateListMap(entitys);
+        if (entities != null) {
+            dataRet = getDateListMap(entities);
         }
         return R.ok().put("data", dataRet).put("unitName",unitName);
     }
@@ -165,9 +187,14 @@ public class CollecstatisController {
      *   流量报表
      *
      */
-    @RequestMapping("/comparisonmutichart/pipeData/{startDate}/{endDate}")
-    public R sumPipeData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    @RequestMapping("/comparisonmutichart/pipeData/{dateType}/{startDate}/{endDate}")
+    public R sumPipeData(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(3);
+
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
+
         List<CompareDataEntity>   entitys = collecstatisService.sumPipeData(startDate,endDate);
         List<AirDataEntity> dataRet = new ArrayList<>();
         if (entitys != null) {
@@ -177,12 +204,17 @@ public class CollecstatisController {
     }
 
     /**
-     *   温度报表
+     *   排气温度报表
      *
      */
-    @RequestMapping("/comparisonmutichart/tempData/{startDate}/{endDate}")
-    public R sumTempData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
-        String unitName = getUnitName(3);
+    @RequestMapping("/comparisonmutichart/tempData/{dateType}/{startDate}/{endDate}")
+    public R sumTempData(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
+        String unitName = getUnitName(4);
+
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
+
         List<CompareDataEntity>   entitys = collecstatisService.sumTempData(startDate,endDate);
         List<AirDataEntity> dataRet = new ArrayList<>();
         if (entitys != null) {
@@ -195,9 +227,13 @@ public class CollecstatisController {
      *   报警报表
      *
      */
-    @RequestMapping("/comparisonmutichart/alarmData/{startDate}/{endDate}")
-    public R alarmData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    @RequestMapping("/comparisonmutichart/alarmData/{dateType}/{startDate}/{endDate}")
+    public R alarmData(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(3);
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
+
         List<CompareDataEntity>   entitys = collecstatisService.alarmData(startDate,endDate);
         List<AirDataEntity> dataRet = new ArrayList<>();
         if (entitys != null) {
@@ -212,8 +248,12 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/airPowerRate/{startDate}/{endDate}")
-    public R airPowerRate(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R airPowerRate(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(3);
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
+
         List<CompareDataEntity>   entitys = collecstatisService.airPowerRate(startDate,endDate);
         if (CollectionUtils.isNotEmpty(entitys)) {
              entitys.stream().map(x->{
@@ -234,8 +274,11 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/pressData/{startDate}/{endDate}")
-    public R pressData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R pressData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(1);
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setSimpleDate(startDateStr,endDateStr,startDate,endDate);
         List<CompareDataEntity>   entitys = collecstatisService.pressData(startDate,endDate);
         getEntities(entitys);
         return R.ok().put("data", entitys).put("unitName",unitName);
@@ -258,8 +301,12 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/powerDetailData/{startDate}/{endDate}")
-    public R powerData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R powerData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(1);
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setSimpleDate(startDateStr,endDateStr,startDate,endDate);
+
         List<CompareDataEntity>   entities = collecstatisService.powerData(startDate,endDate);
         getEntities(entities);
         return R.ok().put("data", entities).put("unitName",unitName);
@@ -270,8 +317,13 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/ldData/{startDate}/{endDate}")
-    public R ldData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R ldData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(1);
+
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setSimpleDate(startDateStr,endDateStr,startDate,endDate);
+
         List<CompareDataEntity>   entities = collecstatisService.ldData(startDate,endDate);
         getEntities(entities);
         return R.ok().put("data", entities).put("unitName",unitName);
@@ -283,8 +335,13 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/tempDetailData/{startDate}/{endDate}")
-    public R tempData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R tempData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(1);
+
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setSimpleDate(startDateStr,endDateStr,startDate,endDate);
+
         List<CompareDataEntity>   entities = collecstatisService.tempData(startDate,endDate);
         getEntities(entities);
         return R.ok().put("data", entities).put("unitName",unitName);
@@ -318,7 +375,7 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/airCost/{dateType}/{equipIds}/{startDate}/{endDate}")
-    public R airCost(@PathVariable("dateType") int dateType , @PathVariable("equipIds") String equipIds, @PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R airCost(@PathVariable("dateType") int dateType , @PathVariable("equipIds") String equipIds, @PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
 
         // dateType(1 当天 2 本周 3 本月 4 本年）
         // collectType 1 压力 Pa  2 电量  kW·h 3 流量 m³ 4 温度 ℃
@@ -326,6 +383,12 @@ public class CollecstatisController {
         int collectType = 3;
         String [] equidArray = equipIds.split(",");
         List<DataEntity> dataX = new ArrayList<>();
+
+
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
+
         String unitName = getUnitName(collectType);
         if (dateType != 0) {
             dateArray = getChartData(dateType, dateArray, collectType, equidArray, dataX);
@@ -339,12 +402,17 @@ public class CollecstatisController {
      *
      */
     @RequestMapping("/comparisonmutichart/airCostexcel/{dateType}/{equipIds}/{startDate}/{endDate}")
-    public R airCostexcel(@PathVariable("dateType") int dateType , @PathVariable("equipIds") String equipIds, @PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
+    public R airCostexcel(@PathVariable("dateType") int dateType , @PathVariable("equipIds") String equipIds,  @PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
 
         // dateType(1 当天 2 本周 3 本月 4 本年）
         // collectType 1 压力 Pa  2 电量  kW·h 3 流量 m³ 4 温度 ℃
         String [] dateArray = null;
         int collectType = 3;
+
+        Date startDate = new Date();
+        Date endDate = new Date();
+        setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
+
         String [] equidArray = equipIds.split(",");
         List<DataEntity> dataX = new ArrayList<>();
         String unitName = getUnitName(collectType);
@@ -356,7 +424,7 @@ public class CollecstatisController {
 
 
     /**
-     * 空气成本 excel 数据
+     * 空气成本 excel 数据 装备类
      * @param dateType
      * @param dateArray
      * @param collectType
@@ -431,7 +499,62 @@ public class CollecstatisController {
     }
 
 
-    private String[] getChartData(@PathVariable("dateType") int dateType, String[] dateArray, int collectType, String[] equidArray, List<DataEntity> dataX) {
+    /**
+     * 获取开始时间 和结束时间
+     * @param startDateStr
+     * @param endDateStr
+     */
+    private void setDate (int dateType,String startDateStr ,String endDateStr,Date startDate,Date endDate) {
+        if (dateType == 0){
+            startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
+            endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
+        } else {
+            getDateByCondition(dateType,startDate,endDate);
+        }
+    }
+
+    /**
+     * 获取开始时间 和结束时间
+     * @param startDateStr
+     * @param endDateStr
+     */
+    private void setSimpleDate (String startDateStr ,String endDateStr,Date startDate,Date endDate) {
+            startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
+            endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
+    }
+    /**
+     * 根据条件返回 开始时间和结束时间
+     * @param startDate
+     * @param endDate
+     */
+    private void getDateByCondition (int dateType,Date startDate ,Date endDate) {
+        if (dateType == 0) {
+            return ;
+        }
+        switch (dateType) {
+            case 1:
+                startDate = DateUtils.getStartTimeofCurrentDay();
+                endDate = DateUtils.getEndTimeofCurrentDay();
+                break;
+            case 2:
+                startDate = DateUtils.getFirstDayofWeek();
+                endDate = DateUtils.getEndDayOfWeek();
+                break;
+            case 3:
+                startDate = DateUtils.getFirstDayOfMonth();
+                endDate = DateUtils.getEndDayOfMonth();
+                break;
+            case 4:
+                startDate = DateUtils.getFirstDayOfYear();
+                endDate = DateUtils.getEndDayOfYear();
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    private String[] getChartData(int dateType, String[] dateArray, int collectType, String[] equidArray, List<DataEntity> dataX) {
         Date startDate;
         Date endDate;
         switch (dateType) {
