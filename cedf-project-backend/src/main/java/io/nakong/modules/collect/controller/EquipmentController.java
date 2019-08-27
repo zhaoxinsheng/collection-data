@@ -1,6 +1,7 @@
 package io.nakong.modules.collect.controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -154,18 +155,18 @@ public class EquipmentController {
     public R save(@RequestBody EquipmentEntity equipment){
        // equipment.setId(UUID.randomUUID().toString().replaceAll("-",""));
 	   int equipId =  equipmentService.insertReturnId(equipment);
-
-        if( CollectionUtils.isNotEmpty(equipment.getDetail()) ) {
-            equipment.getDetail().stream().map(x->{
-                x.setEquipId(equipId);
+        List <EquipColorEntity> equipList = equipment.getDetail();
+        if(equipId > 0 &&  CollectionUtils.isNotEmpty(equipList) ) {
+            equipList = equipList.stream().map(x->{
+                x.setEquipId(equipment.getId());
                 return x;
-            });
-            equipColorService.insertBatch(equipment.getDetail());
+            }).collect(Collectors.toList());
+            equipColorService.insertBatch(equipList);
         }
         return R.ok();
     }
 
-    /**
+    /** 
      * 修改
      */
     @RequestMapping("/update")
@@ -181,13 +182,17 @@ public class EquipmentController {
                     param.put("equip_id",equipId);
                     equipColorService.deleteByMap(param);
                 }
-
-                if( CollectionUtils.isNotEmpty(equipment.getDetail()) ) {
-                    equipment.getDetail().stream().map(x->{
-                        x.setEquipId(equipId);
+                List <EquipColorEntity> equipList = equipment.getDetail();
+                if( CollectionUtils.isNotEmpty(equipList) ) {
+//                    equipment.getDetail().stream().map(x->{
+//                        x.setEquipId(equipId);
+//                        return x;
+//                    });
+                    equipList = equipList.stream().map(x->{
+                        x.setEquipId(equipment.getId());
                         return x;
-                    });
-                    equipColorService.insertBatch(equipment.getDetail());
+                    }).collect(Collectors.toList());
+                    equipColorService.insertBatch(equipList);
                 }
             }
 
