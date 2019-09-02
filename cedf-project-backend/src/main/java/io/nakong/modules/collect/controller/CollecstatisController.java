@@ -247,7 +247,7 @@ public class CollecstatisController {
      *   气电比报表
      *
      */
-    @RequestMapping("/comparisonmutichart/airPowerRate/{startDate}/{endDate}")
+    @RequestMapping("/comparisonmutichart/airPowerRate/{dateType}/{startDate}/{endDate}")
     public R airPowerRate(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
         String unitName = getUnitName(3);
         Date startDate = new Date();

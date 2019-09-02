@@ -142,7 +142,11 @@ public class EquipmentController {
     @RequestMapping("/info/{id}")
     @RequiresPermissions("collect:equipment:info")
     public R info(@PathVariable("id") String id){
+
 			EquipmentEntity equipment = equipmentService.selectById(id);
+			Map<String,Object> map = new HashMap<>();
+			map.put("equip_id",id);
+            equipment.setDetail(equipColorService.selectByMap(map));
 
         return R.ok().put("equipment", equipment);
     }
@@ -159,6 +163,7 @@ public class EquipmentController {
         if(equipId > 0 &&  CollectionUtils.isNotEmpty(equipList) ) {
             equipList = equipList.stream().map(x->{
                 x.setEquipId(equipment.getId());
+                x.setInsertTime(new Date());
                 return x;
             }).collect(Collectors.toList());
             equipColorService.insertBatch(equipList);
@@ -166,7 +171,7 @@ public class EquipmentController {
         return R.ok();
     }
 
-    /** 
+    /**
      * 修改
      */
     @RequestMapping("/update")

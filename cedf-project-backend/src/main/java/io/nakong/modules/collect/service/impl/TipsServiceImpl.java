@@ -36,8 +36,7 @@ public class TipsServiceImpl extends ServiceImpl<TipsDao, TipsEntity> implements
             List<TipsEntity> dataList = page.getRecords();
             for (TipsEntity entity : dataList) {
                 if (entity.getPeriodType() != null ) {
-                    EquipmentTypeEntity equipmentTypeEntity =   equipmentTypeService.selectById(entity.getPeriodType());
-                    entity.setPeriodTypeName(equipmentTypeEntity.getName());
+                    entity.setPeriodTypeName(getPeriodName(entity.getPeriodType()));
                 }
             }
         }
@@ -45,4 +44,23 @@ public class TipsServiceImpl extends ServiceImpl<TipsDao, TipsEntity> implements
         return new PageUtils(page);
     }
 
+    //         units: {'0': '秒', '1': '分', '2': '时'}
+    private String getPeriodName(int peroidType) {
+        String retValue = "秒";
+        switch (peroidType) {
+            case 0:
+                retValue = "秒";
+                break;
+            case 1:
+                retValue = "分";
+                break;
+            case 2:
+                retValue = "时";
+                break;
+           default:
+                    break;
+
+        }
+        return retValue;
+    }
 }
