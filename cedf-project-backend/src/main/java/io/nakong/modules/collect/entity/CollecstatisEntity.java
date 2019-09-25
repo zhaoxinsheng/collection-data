@@ -81,6 +81,17 @@ public class CollecstatisEntity implements Serializable {
 	 */
 	private Date updateTime;
 
+
+	private String dateStr;
+
+	public String getDateStr() {
+		return dateStr;
+	}
+
+	public void setDateStr(String dateStr) {
+		this.dateStr = dateStr;
+	}
+
 	/**
 	 * 设置：
 	 */

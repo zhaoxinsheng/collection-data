@@ -1,4 +1,5 @@
 package io.nakong.modules.collect.service;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import io.nakong.common.utils.PageUtils;
 import io.nakong.modules.collect.entity.CollecstatisEntity;
@@ -48,17 +49,23 @@ public interface CollecstatisService extends IService<CollecstatisEntity> {
 
     List<CompareDataEntity> sumPipeData(Date startDate, Date endDate);
 
-    List<CompareDataEntity> sumTempData(Date startDate, Date endDate);
+    /**
+     * 分页处理
+     * @return
+     */
+    List<CompareDataEntity>  sumPipePageList(io.nakong.common.page.Page<CompareDataEntity> pageParam);
+
+    List<CompareDataEntity> sumTempDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam);
 
     List<CompareDataEntity> airPowerRate(Date startDate, Date endDate);
 
-    List<CompareDataEntity> pressData(Date startDate, Date endDate);
+    List<CompareDataEntity> pressDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam);
 
-    List<CompareDataEntity> pipeData(Date startDate, Date endDate);
-    List<CompareDataEntity> powerData(Date startDate, Date endDate);
+    List<CompareDataEntity> pipeDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam);
+    List<CompareDataEntity> powerDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam);
 
-    List<CompareDataEntity> ldData(Date startDate, Date endDate);
-    List<CompareDataEntity> tempData(Date startDate, Date endDate);
+    List<CompareDataEntity> ldDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam);
+    List<CompareDataEntity> tempDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam);
 
 
     List<CompareDataEntity>   airCostChartByDay(Integer compareType,  String[] equidArray, Date startDate, Date endDate);

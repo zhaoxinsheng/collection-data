@@ -91,10 +91,10 @@ public class CollecstatisServiceImpl extends ServiceImpl<CollecstatisDao, Collec
         return   collecstatisDao.sumPipeData(startDate, endDate);
     }
 
-    @Override
-    public List<CompareDataEntity> sumTempData(Date startDate, Date endDate) {
-        return   collecstatisDao.sumTempData(startDate, endDate);
-    }
+//    @Override
+//    public List<CompareDataEntity> sumTempData(Date startDate, Date endDate) {
+//        return   collecstatisDao.sumTempData(startDate, endDate);
+//    }
 
     @Override
     public List<CompareDataEntity> airPowerRate(Date startDate, Date endDate) {
@@ -102,28 +102,28 @@ public class CollecstatisServiceImpl extends ServiceImpl<CollecstatisDao, Collec
     }
 
     @Override
-    public List<CompareDataEntity> pressData(Date startDate, Date endDate) {
-        return   collecstatisDao.pressData(startDate, endDate);
+    public List<CompareDataEntity> pressDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return   collecstatisDao.pressDataPageList(pageParam);
     }
 
     @Override
-    public List<CompareDataEntity> pipeData(Date startDate, Date endDate) {
-        return   collecstatisDao.pipeData(startDate, endDate);
+    public List<CompareDataEntity> pipeDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return   collecstatisDao.pipeDataPageList(pageParam);
     }
 
     @Override
-    public List<CompareDataEntity> powerData(Date startDate, Date endDate) {
-        return   collecstatisDao.powerData(startDate, endDate);
+    public List<CompareDataEntity> powerDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return   collecstatisDao.powerDataPageList(pageParam);
     }
 
     @Override
-    public List<CompareDataEntity> ldData(Date startDate, Date endDate) {
-        return   collecstatisDao.ldData(startDate, endDate);
+    public List<CompareDataEntity> ldDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return   collecstatisDao.ldDataPageList(pageParam);
     }
 
     @Override
-    public List<CompareDataEntity> tempData(Date startDate, Date endDate) {
-        return   collecstatisDao.tempData(startDate, endDate);
+    public List<CompareDataEntity> tempDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return   collecstatisDao.tempDataPageList(pageParam);
     }
 
     @Override
@@ -144,5 +144,16 @@ public class CollecstatisServiceImpl extends ServiceImpl<CollecstatisDao, Collec
     @Override
     public List<CompareDataEntity> airCostChartByYear(Integer compareType,  String[] equidArray, Date startDate, Date endDate) {
         return  collecstatisDao.airCostByYear(compareType,equidArray,startDate,endDate);
+    }
+
+    @Override
+    public  List<CompareDataEntity> sumPipePageList(io.nakong.common.page.Page<CompareDataEntity> page) {
+        return  collecstatisDao.queryListPipePageList(page);
+
+    }
+
+    @Override
+    public List<CompareDataEntity> sumTempDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return null;
     }
 }

@@ -18,4 +18,11 @@ import org.apache.ibatis.annotations.Param;
 public interface EquipColorDao extends BaseMapper<EquipColorEntity> {
 
     EquipColorEntity queryByCollectType(@Param("equipId") String equipId, @Param("collectType") int collectType);
+
+    /**
+     * 根据变量获取设备
+     * @param varname
+     * @return
+     */
+    EquipColorEntity  selectByVarName(@Param("varname") String varname);
 }

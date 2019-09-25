@@ -14,6 +14,7 @@ public class CompareDataEntity implements  java.io.Serializable{
     private String name;
     private Integer data;
     private Date date;
+    private String dateStr;
     private Integer powerData;
 
     private BigDecimal powerPrice;
@@ -22,6 +23,13 @@ public class CompareDataEntity implements  java.io.Serializable{
 
     private String unitName;
 
+    public String getDateStr() {
+        return dateStr;
+    }
+
+    public void setDateStr(String dateStr) {
+        this.dateStr = dateStr;
+    }
 
     public BigDecimal getPowerPrice() {
         return powerPrice;

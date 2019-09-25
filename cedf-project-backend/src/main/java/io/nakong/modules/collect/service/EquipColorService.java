@@ -19,5 +19,7 @@ public interface EquipColorService extends IService<EquipColorEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     EquipColorEntity queryByCollectType(String equipId,int collectType);
+
+    EquipColorEntity selectByVarName(String varName);
 }
 

@@ -1,10 +1,16 @@
 package io.nakong.modules.collect.controller;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.nakong.common.utils.DateUtils;
+import io.nakong.common.utils.Query;
 import io.nakong.modules.collect.entity.*;
 import io.nakong.modules.collect.service.*;
 import org.apache.commons.collections4.CollectionUtils;
@@ -187,20 +193,41 @@ public class CollecstatisController {
      *   流量报表
      *
      */
-    @RequestMapping("/comparisonmutichart/pipeData/{dateType}/{startDate}/{endDate}")
-    public R sumPipeData(@PathVariable("dateType") int dateType,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
-        String unitName = getUnitName(3);
+    @RequestMapping("/comparisonmutichart/pipeData")
+    public R sumPipeData(@RequestParam Map<String, Object> params){
+
+
+        int currentPage =  params.get("page") == null ? 0 : Integer.parseInt((String)params.get("page"));
+        int limit =  params.get("limit") == null ? 0 :  Integer.parseInt((String)params.get("limit"));
+        int dateType = params.get("dateType") == null ? 0 : Integer.parseInt((String)params.get("dateType"));
+        String startDateStr = String.valueOf(params.get("startDate"));
+        String endDateStr = String.valueOf(params.get("endDate"));
 
         Date startDate = new Date();
         Date endDate = new Date();
         setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
 
-        List<CompareDataEntity>   entitys = collecstatisService.sumPipeData(startDate,endDate);
-        List<AirDataEntity> dataRet = new ArrayList<>();
-        if (entitys != null) {
-            dataRet = getDateListMap(entitys);
+        Map<String, Serializable> map = new HashMap<>();
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        io.nakong.common.page.Page<CompareDataEntity> pageParam = new io.nakong.common.page.Page<CompareDataEntity>();
+        pageParam.setPaging(true);
+        pageParam.setMap(map);
+        pageParam.setStart((currentPage - 1 ) * limit);
+        pageParam.setEnd(currentPage * limit - 1);
+
+        List<CompareDataEntity> entitys =  collecstatisService.sumPipePageList(pageParam);
+        pageParam.setData(entitys);
+
+        if (CollectionUtils.isNotEmpty(entitys)) {
+        for(CompareDataEntity compareDataEntity : entitys){
+            compareDataEntity.setUnitName("m3");
+            // 查询变量名称
+            compareDataEntity.setName("累积流量FT7");
         }
-        return R.ok().put("data", dataRet).put("unitName",unitName);
+        }
+        PageUtils pageUtils  = new PageUtils(entitys,pageParam.getTotal(),limit,currentPage);
+        return R.ok().put("page", pageUtils);
     }
 
     /**
@@ -215,7 +242,7 @@ public class CollecstatisController {
         Date endDate = new Date();
         setDate (dateType,startDateStr ,endDateStr,startDate,endDate);
 
-        List<CompareDataEntity>   entitys = collecstatisService.sumTempData(startDate,endDate);
+        List<CompareDataEntity>   entitys = null;//collecstatisService.sumTempData(startDate,endDate);
         List<AirDataEntity> dataRet = new ArrayList<>();
         if (entitys != null) {
             dataRet = getDateListMap(entitys);
@@ -273,60 +300,101 @@ public class CollecstatisController {
      *   压力数据
      *
      */
-    @RequestMapping("/comparisonmutichart/pressData/{startDate}/{endDate}")
-    public R pressData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
+    @RequestMapping("/comparisonmutichart/pressData")
+    public R pressData(@RequestParam Map<String, Object> params){
+
+        int currentPage =  params.get("page") == null ? 0 : Integer.parseInt((String)params.get("page"));
+        int limit =  params.get("limit") == null ? 0 :  Integer.parseInt((String)params.get("limit"));
+        int dateType = params.get("dateType") == null ? 0 : Integer.parseInt((String)params.get("dateType"));
+        String startDateStr = String.valueOf(params.get("startDate"));
+        String endDateStr = String.valueOf(params.get("endDate"));
+
         String unitName = getUnitName(1);
         Date startDate = new Date();
         Date endDate = new Date();
         setSimpleDate(startDateStr,endDateStr,startDate,endDate);
-        List<CompareDataEntity>   entitys = collecstatisService.pressData(startDate,endDate);
-        getEntities(entitys);
-        return R.ok().put("data", entitys).put("unitName",unitName);
-    }
 
-//    /**
-//     *   压力数据
-//     *
-//     */
-//    @RequestMapping("/comparisonmutichart/pipeData/{startDate}/{endDate}")
-//    public R pressData(@PathVariable("startDate") Date startDate,@PathVariable("endDate") Date endDate){
-//        String unitName = getUnitName(1);
-//        List<CompareDataEntity>   entitys = collecstatisService.pipeData(startDate,endDate);
-//        getEntities(entitys);
-//        return R.ok().put("data", entitys).put("unitName",unitName);
-//    }
+        Map<String, Serializable> map = new HashMap<>();
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        io.nakong.common.page.Page<CompareDataEntity> pageParam = new io.nakong.common.page.Page<CompareDataEntity>();
+        pageParam.setPaging(true);
+        pageParam.setMap(map);
+        pageParam.setStart((currentPage - 1 ) * limit);
+        pageParam.setEnd(currentPage * limit - 1);
+
+        List<CompareDataEntity>   entitys = collecstatisService.pressDataPageList(pageParam);
+        getEntities(entitys);
+        PageUtils pageUtils  = new PageUtils(entitys,pageParam.getTotal(),limit,currentPage);
+        return R.ok().put("page", pageUtils);
+    }
 
     /**
      *   耗电量数据
      *
      */
-    @RequestMapping("/comparisonmutichart/powerDetailData/{startDate}/{endDate}")
-    public R powerData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
-        String unitName = getUnitName(1);
+    @RequestMapping("/comparisonmutichart/powerDetailData")
+    public R powerData(@RequestParam Map<String, Object> params){
+
+        int currentPage =  params.get("page") == null ? 0 : Integer.parseInt((String)params.get("page"));
+        int limit =  params.get("limit") == null ? 0 :  Integer.parseInt((String)params.get("limit"));
+        int dateType = params.get("dateType") == null ? 0 : Integer.parseInt((String)params.get("dateType"));
+        String startDateStr = String.valueOf(params.get("startDate"));
+        String endDateStr = String.valueOf(params.get("endDate"));
+
         Date startDate = new Date();
         Date endDate = new Date();
+
+        String unitName = getUnitName(1);
         setSimpleDate(startDateStr,endDateStr,startDate,endDate);
 
-        List<CompareDataEntity>   entities = collecstatisService.powerData(startDate,endDate);
+        Map<String, Serializable> map = new HashMap<>();
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        io.nakong.common.page.Page<CompareDataEntity> pageParam = new io.nakong.common.page.Page<CompareDataEntity>();
+        pageParam.setPaging(true);
+        pageParam.setMap(map);
+        pageParam.setStart((currentPage - 1 ) * limit);
+        pageParam.setEnd(currentPage * limit - 1);
+
+        List<CompareDataEntity>   entities = collecstatisService.powerDataPageList(pageParam);
         getEntities(entities);
-        return R.ok().put("data", entities).put("unitName",unitName);
+        PageUtils pageUtils  = new PageUtils(entities,pageParam.getTotal(),limit,currentPage);
+        return R.ok().put("page", pageUtils);
+
     }
 
     /**
      *   压力露点数据
      *
      */
-    @RequestMapping("/comparisonmutichart/ldData/{startDate}/{endDate}")
-    public R ldData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
+    @RequestMapping("/comparisonmutichart/ldData")
+    public R ldData(@RequestParam Map<String, Object> params){
         String unitName = getUnitName(1);
+
+        int currentPage =  params.get("page") == null ? 0 : Integer.parseInt((String)params.get("page"));
+        int limit =  params.get("limit") == null ? 0 :  Integer.parseInt((String)params.get("limit"));
+        int dateType = params.get("dateType") == null ? 0 : Integer.parseInt((String)params.get("dateType"));
+        String startDateStr = String.valueOf(params.get("startDate"));
+        String endDateStr = String.valueOf(params.get("endDate"));
 
         Date startDate = new Date();
         Date endDate = new Date();
         setSimpleDate(startDateStr,endDateStr,startDate,endDate);
 
-        List<CompareDataEntity>   entities = collecstatisService.ldData(startDate,endDate);
+        Map<String, Serializable> map = new HashMap<>();
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        io.nakong.common.page.Page<CompareDataEntity> pageParam = new io.nakong.common.page.Page<CompareDataEntity>();
+        pageParam.setPaging(true);
+        pageParam.setMap(map);
+        pageParam.setStart((currentPage - 1 ) * limit);
+        pageParam.setEnd(currentPage * limit - 1);
+
+        List<CompareDataEntity>   entities = collecstatisService.ldDataPageList(pageParam);
         getEntities(entities);
-        return R.ok().put("data", entities).put("unitName",unitName);
+        PageUtils pageUtils  = new PageUtils(entities,pageParam.getTotal(),limit,currentPage);
+        return R.ok().put("page", pageUtils);
     }
 
 
@@ -334,17 +402,34 @@ public class CollecstatisController {
      *   温度数据
      *
      */
-    @RequestMapping("/comparisonmutichart/tempDetailData/{startDate}/{endDate}")
-    public R tempData(@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr){
+    @RequestMapping("/comparisonmutichart/tempDetailData")
+    public R tempData(@RequestParam Map<String, Object> params){
         String unitName = getUnitName(1);
+
+        int currentPage =  params.get("page") == null ? 0 : Integer.parseInt((String)params.get("page"));
+        int limit =  params.get("limit") == null ? 0 :  Integer.parseInt((String)params.get("limit"));
+        int dateType = params.get("dateType") == null ? 0 : Integer.parseInt((String)params.get("dateType"));
+        String startDateStr = String.valueOf(params.get("startDate"));
+        String endDateStr = String.valueOf(params.get("endDate"));
 
         Date startDate = new Date();
         Date endDate = new Date();
+
         setSimpleDate(startDateStr,endDateStr,startDate,endDate);
 
-        List<CompareDataEntity>   entities = collecstatisService.tempData(startDate,endDate);
+        Map<String, Serializable> map = new HashMap<>();
+        map.put("startDate",startDate);
+        map.put("endDate",endDate);
+        io.nakong.common.page.Page<CompareDataEntity> pageParam = new io.nakong.common.page.Page<CompareDataEntity>();
+        pageParam.setPaging(true);
+        pageParam.setMap(map);
+        pageParam.setStart((currentPage - 1 ) * limit);
+        pageParam.setEnd(currentPage * limit - 1);
+
+        List<CompareDataEntity>   entities = collecstatisService.tempDataPageList(pageParam);
         getEntities(entities);
-        return R.ok().put("data", entities).put("unitName",unitName);
+        PageUtils pageUtils  = new PageUtils(entities,pageParam.getTotal(),limit,currentPage);
+        return R.ok().put("page", pageUtils);
     }
 
     /**
@@ -505,12 +590,17 @@ public class CollecstatisController {
      * @param endDateStr
      */
     private void setDate (int dateType,String startDateStr ,String endDateStr,Date startDate,Date endDate) {
+        Date newStartDate = startDate;
+        Date newEndDate = endDate;
+
         if (dateType == 0){
-            startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
-            endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
+              newStartDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
+              newEndDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
         } else {
-            getDateByCondition(dateType,startDate,endDate);
+            getDateByCondition(dateType,newStartDate,newEndDate);
         }
+        startDate.setTime(newStartDate.getTime() );
+        endDate.setTime(newEndDate.getTime());
     }
 
     /**
@@ -531,27 +621,32 @@ public class CollecstatisController {
         if (dateType == 0) {
             return ;
         }
+        Date newStartDate = startDate;
+        Date newEndDate = endDate;
+
         switch (dateType) {
             case 1:
-                startDate = DateUtils.getStartTimeofCurrentDay();
-                endDate = DateUtils.getEndTimeofCurrentDay();
+                newStartDate = DateUtils.getStartTimeofCurrentDay();
+                newEndDate = DateUtils.getEndTimeofCurrentDay();
                 break;
             case 2:
-                startDate = DateUtils.getFirstDayofWeek();
-                endDate = DateUtils.getEndDayOfWeek();
+                newStartDate = DateUtils.getFirstDayofWeek();
+                newEndDate = DateUtils.getEndDayOfWeek();
                 break;
             case 3:
-                startDate = DateUtils.getFirstDayOfMonth();
-                endDate = DateUtils.getEndDayOfMonth();
+                newStartDate = DateUtils.getFirstDayOfMonth();
+                newEndDate = DateUtils.getEndDayOfMonth();
                 break;
             case 4:
-                startDate = DateUtils.getFirstDayOfYear();
-                endDate = DateUtils.getEndDayOfYear();
+                newStartDate = DateUtils.getFirstDayOfYear();
+                newEndDate = DateUtils.getEndDayOfYear();
 
                 break;
             default:
                 break;
         }
+         startDate.setTime(newStartDate.getTime());
+         endDate.setTime(newEndDate.getTime());
     }
 
     private String[] getChartData(int dateType, String[] dateArray, int collectType, String[] equidArray, List<DataEntity> dataX) {
@@ -694,12 +789,12 @@ public class CollecstatisController {
 
 
     private List<AirDataEntity> getDateListMap(List<CompareDataEntity> entitys) {
-        Map<Date, List<CompareDataEntity>> map =  entitys.parallelStream().collect(Collectors.groupingBy(CompareDataEntity::getDate));
+        Map<String, List<CompareDataEntity>> map =  entitys.parallelStream().collect(Collectors.groupingBy(CompareDataEntity::getDateStr));
         List<AirDataEntity> dataRet = new ArrayList<>();
         if (map != null) {
             map.forEach((x,y)->{
                 AirDataEntity entity = new AirDataEntity();
-                entity.setDate(x);
+                entity.setDateStr(x);
                 entity.setData(y);
                 dataRet.add(entity);
             });

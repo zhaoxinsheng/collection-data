@@ -35,4 +35,8 @@ public class EquipColorServiceImpl extends ServiceImpl<EquipColorDao, EquipColor
         return equipColorDao.queryByCollectType(equipId, collectType);
     }
 
+    @Override
+   public EquipColorEntity selectByVarName(String varName){
+        return equipColorDao.selectByVarName(varName);
+    }
 }

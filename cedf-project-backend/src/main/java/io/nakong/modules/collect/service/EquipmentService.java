@@ -18,5 +18,7 @@ public interface EquipmentService extends IService<EquipmentEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     int insertReturnId(EquipmentEntity entity);
+
+
 }
 

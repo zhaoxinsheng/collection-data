@@ -18,6 +18,8 @@
         <result property="dayYear" column="day_year"/>
         <result property="insertTime" column="insert_time"/>
         <result property="updateTime" column="update_time"/>
+        <result property="dateStr" column="dateStr"/>
+
     </resultMap>
 
      <select id="comparisonChartByDay" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
@@ -78,7 +80,7 @@
     </select>
 
     <select id="getSumAirData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') date,t.equip_id equipId,sum(t.collec_value) data
+        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,t.equip_id equipId,sum(t.collec_value) data
         from t_pipe t
         where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
@@ -92,10 +94,11 @@
     </select>
 
     <select id="sumPipeData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') date,t.equip_id equipId,sum(t.collec_value) data
+        select  date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,t.equip_id equipId,sum(t.collec_value) data
         from t_pipe t
         where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
-        group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+         group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+         order by t.insert_time desc
     </select>
 
     <select id="sumTempData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
@@ -119,35 +122,35 @@
         group by  t.equip_id
     </select>
 
-    <select id="pressData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+    <select id="pressDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
         select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
         from  t_press t
-        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
     </select>
 
-    <select id="pipeData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+    <select id="pipeDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
         from  t_pipe t
-        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
     </select>
-    <select id="powerData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+    <select id="powerDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
         from  t_power t
-        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
     </select>
-    <select id="ldData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+    <select id="ldDataPageList"  parameterType="io.nakong.common.page.Page"  resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
         from  t_press_ld t
-        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
     </select>
-    <select id="tempData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+    <select id="tempDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
         from  t_temp t
-        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
     </select>
 
@@ -203,7 +206,7 @@
 
      </select>
 
-    <select id="airCostChartByYear" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+    <select id="airCostByYear" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
 
         select sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) powerData,
         sum(if(collect_type = 2,collect_data,0))/count(if(collect_type = 2,1,0)) data,
@@ -218,4 +221,21 @@
         and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m'),equip_id
      </select>
+
+    <select id="sumPipePageList"    resultMap="collecstatisMap">
+       select  date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,t.equip_id equipId,sum(t.collec_value) data
+        from t_pipe t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+         group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+         order by t.insert_time desc
+	</select>
+
+    <select id="queryListPipePageList"    parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+       select  date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,t.equip_id equipId,sum(t.collec_value) data
+        from t_pipe t
+        where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
+         group by date_format(t.insert_time, '%Y-%m-%d %H:%i') ,t.equip_id
+         order by t.insert_time desc
+	</select>
+
 </mapper>

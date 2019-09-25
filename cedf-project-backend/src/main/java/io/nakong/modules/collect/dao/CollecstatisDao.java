@@ -1,5 +1,6 @@
 package io.nakong.modules.collect.dao;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import io.nakong.modules.collect.entity.CollecstatisEntity;
 import io.nakong.modules.collect.entity.CompareDataEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -45,15 +46,15 @@ public interface CollecstatisDao extends BaseMapper<CollecstatisEntity> {
 
      List<CompareDataEntity> airPowerRate(@Param("startDate") Date startDate,  @Param("endDate")Date endDate) ;
 
-    List<CompareDataEntity> pressData(@Param("startDate") Date startDate,  @Param("endDate")Date endDate) ;
+    List<CompareDataEntity> pressDataPageList(io.nakong.common.page.Page<CompareDataEntity> page) ;
 
-    List<CompareDataEntity> pipeData(@Param("startDate") Date startDate,  @Param("endDate")Date endDate) ;
+    List<CompareDataEntity> pipeDataPageList(io.nakong.common.page.Page<CompareDataEntity> page) ;
 
-    List<CompareDataEntity> powerData(@Param("startDate") Date startDate,  @Param("endDate")Date endDate) ;
+    List<CompareDataEntity> powerDataPageList(io.nakong.common.page.Page<CompareDataEntity> page) ;
 
-    List<CompareDataEntity> ldData(@Param("startDate") Date startDate,  @Param("endDate")Date endDate) ;
+    List<CompareDataEntity> ldDataPageList(io.nakong.common.page.Page<CompareDataEntity> page) ;
 
-    List<CompareDataEntity> tempData(@Param("startDate") Date startDate,  @Param("endDate")Date endDate) ;
+    List<CompareDataEntity> tempDataPageList(io.nakong.common.page.Page<CompareDataEntity> page) ;
 
 
     List<CompareDataEntity>  airCostChartByDay(@Param("compareType") Integer compareType, @Param("equipId")String[] equipId, @Param("startDate")Date startDate,@Param("endDate") Date endDate);
@@ -61,5 +62,12 @@ public interface CollecstatisDao extends BaseMapper<CollecstatisEntity> {
     List<CompareDataEntity>  airCostByMonth(@Param("compareType")Integer compareType, @Param("equipId")String[] equipId, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
     List<CompareDataEntity>  airCostByYear(@Param("compareType")Integer compareType, @Param("equipId")String[] equipId, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
 
-
+    /**
+     * 流量分页数据
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    io.nakong.common.page.Page<CompareDataEntity>  sumPipePageList(@Param("startDate") Date startDate, @Param("endDate")Date endDate);
+    List<CompareDataEntity> queryListPipePageList(io.nakong.common.page.Page<CompareDataEntity> page);
 }

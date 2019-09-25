@@ -54,6 +54,19 @@ public class EquipColorEntity implements Serializable {
 	private Date insertTime;
 
 	/**
+	 * 变量名称
+	 */
+	private String varname;
+
+	public String getVarname() {
+		return varname;
+	}
+
+	public void setVarname(String varname) {
+		this.varname = varname;
+	}
+
+	/**
 	 * 设置：
 	 */
 	public void setId(Integer id) {

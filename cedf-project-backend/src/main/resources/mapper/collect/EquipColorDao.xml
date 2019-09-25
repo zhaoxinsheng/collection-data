@@ -11,9 +11,14 @@
         <result property="collectType" column="collect_type"/>
         <result property="unit" column="unit"/>
         <result property="insertTime" column="insert_time"/>
+        <result property="varname" column="varname"/>
     </resultMap>
     <select id="queryByCollectType" resultType="io.nakong.modules.collect.entity.EquipColorEntity">
             select * from t_equip_color t where t.equip_id=#{equipId} and t.collect_type=#{collectType} limit 1
+     </select>
+
+    <select id="selectByVarName" resultType="io.nakong.modules.collect.entity.EquipColorEntity">
+            select * from t_equip_color t where t.varname=#{varname} limit 1
      </select>
 
 </mapper>

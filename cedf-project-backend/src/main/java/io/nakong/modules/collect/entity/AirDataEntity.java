@@ -13,6 +13,8 @@ public class AirDataEntity  implements  java.io.Serializable{
 
    private Date date;
 
+    private String dateStr;
+
    private List<CompareDataEntity> data;
 
     public Date getDate() {
@@ -29,5 +31,13 @@ public class AirDataEntity  implements  java.io.Serializable{
 
     public void setData(List<CompareDataEntity> data) {
         this.data = data;
+    }
+
+    public String getDateStr() {
+        return dateStr;
+    }
+
+    public void setDateStr(String dateStr) {
+        this.dateStr = dateStr;
     }
 }
