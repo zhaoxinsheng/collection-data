@@ -2,6 +2,7 @@ package io.nakong.common.utils;
 
 import java.util.concurrent.TimeUnit;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -11,7 +12,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
+
 
 /**
  * Redis工具类

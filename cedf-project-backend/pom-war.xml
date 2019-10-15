@@ -17,12 +17,11 @@
     
 
     <properties>
-        
-		
-	   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-	 
 		<mybatisplus.spring.boot.version>1.0.5</mybatisplus.spring.boot.version>
 		<mybatisplus.version>2.1.9</mybatisplus.version>
 		<mysql.version>5.1.38</mysql.version>
@@ -48,8 +47,39 @@
 		<artifactId>cedf</artifactId>
 		
     </properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper</artifactId>
+			<version>5.1.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.50</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openscada.utgard</groupId>
+			<artifactId>org.openscada.opc.lib</artifactId>
+			<version>1.5.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>org.openscada.jinterop</artifactId>
+					<groupId>org.openscada.jintero.deps</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-    <dependencies>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -72,7 +102,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
@@ -104,7 +134,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.version}</version>
+			<version>${mysql.version}</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<!--oracle驱动 -->
 		<dependency>
@@ -131,7 +161,6 @@
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-			<version>${quartz.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.mchange</groupId>
@@ -157,7 +186,7 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>${commons.codec.version}</version>
+			<version>${commons.codec.version}</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
 			<groupId>commons-configuration</groupId>
@@ -218,7 +247,7 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>${joda.time.version}</version>
+			<version>${joda.time.version}</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
 			<groupId>org.jxls</groupId>
@@ -240,21 +269,31 @@
 			<artifactId>jxls-reader</artifactId>
 			<version>2.0.3</version>
 		</dependency>
-		
-		 <dependency>
-		    <groupId>com.rabbitmq</groupId>
-		    <artifactId>amqp-client</artifactId>
-		    <version>5.2.0</version><!--$NO-MVN-MAN-VER$-->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.rabbitmq</groupId>
-		    <artifactId>rabbitmq-client</artifactId>
-		    <version>1.3.0</version>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>5.2.0</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
-		
-		
-		
-    </dependencies>
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>rabbitmq-client</artifactId>
+			<version>1.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+	</dependencies>
 
     <build>
         <finalName>${artifactId}</finalName>

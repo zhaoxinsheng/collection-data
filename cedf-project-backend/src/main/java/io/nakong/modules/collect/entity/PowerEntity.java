@@ -1,8 +1,10 @@
 package io.nakong.modules.collect.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -30,6 +32,12 @@ public class PowerEntity implements Serializable {
 	 * 
 	 */
 	private String collecValue;
+
+	@TableField(exist = false)
+	private String name;
+
+	@TableField(exist = false)
+	private String unitName;
 	/**
 	 * 
 	 */
@@ -42,6 +50,22 @@ public class PowerEntity implements Serializable {
 	 * 
 	 */
 	private Date insertTime;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUnitName() {
+		return unitName;
+	}
+
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
+	}
 
 	/**
 	 * 设置：

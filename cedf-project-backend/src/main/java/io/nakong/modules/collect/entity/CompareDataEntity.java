@@ -11,16 +11,19 @@ import java.util.Date;
  */
 public class CompareDataEntity implements  java.io.Serializable{
     private String equipId;
+    @ExcelColumn(value = "采集数据名称",col = 1)
     private String name;
+    @ExcelColumn(value = "数值",col = 2)
     private Integer data;
     private Date date;
+    @ExcelColumn(value = "采集时间",col = 4)
     private String dateStr;
     private Integer powerData;
 
     private BigDecimal powerPrice;
     // 气电比
     private Integer rate;
-
+    @ExcelColumn(value = "采集单位",col = 3)
     private String unitName;
 
     public String getDateStr() {

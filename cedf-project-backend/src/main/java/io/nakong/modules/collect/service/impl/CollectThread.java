@@ -1,7 +1,8 @@
 package io.nakong.modules.collect.service.impl;
 
+import com.baomidou.mybatisplus.service.IService;
 import io.nakong.common.utils.CacheUtils;
-import io.nakong.modules.collect.entity.PipeEntity;
+import io.nakong.modules.collect.entity.*;
 import io.nakong.modules.collect.service.PipeService;
 import org.jinterop.dcom.common.JIException;
 import org.jinterop.dcom.core.JIVariant;
@@ -20,13 +21,15 @@ public class CollectThread implements Runnable {
     AccessBase access;
     String item;
     int vt_type;
-    PipeService pipeService;
+    IService insertService;
+    int collecType;
 
-    public CollectThread(PipeService pipeService, AccessBase access, String item, int vt_type) {
+    public CollectThread(IService insertService, AccessBase access, String item, int vt_type,int collecType) {
         this.access = access;
         this.item = item;
         this.vt_type = vt_type;
-        this.pipeService = pipeService;
+        this.insertService = insertService;
+        this.collecType = collecType;
     }
 
     @Override
@@ -39,14 +42,8 @@ public class CollectThread implements Runnable {
                         String value = read(itemState.getValue(), vt_type);
                         // TODO 查询数据库是否配置了该变量，数据添加后记录到cache 中
                         Integer equipId = CacheUtils.getValue(item);
-                        // 写数据库
-                       // System.out.println("-----获取到的值： " + value);
-                        PipeEntity entity = new PipeEntity();
-                        entity.setCollecTime(new Date());
-                        entity.setCollecValue(value);
-                        entity.setInsertTime(new Date());
-                        entity.setEquipId(String.valueOf(equipId));
-                        pipeService.insert(entity);
+                        equipId = equipId == null ? 1 : equipId;
+                        insertValue(value,equipId);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -61,6 +58,91 @@ public class CollectThread implements Runnable {
         access.bind();
     }
 
+    private void insertValue(String value,Integer equipId) {
+        // 写数据库
+
+        switch (collecType) {
+            case 1:
+                insertPressValue(value,equipId);
+                break;
+            case 2:
+                insertPipeValue(value,equipId);
+                break;
+            case 3:
+                insertPipeSumValue(value,equipId);
+                break;
+            case 4:
+                insertPowerValue(value,equipId);
+                break;
+            case 5:
+                insertPressLDValue(value,equipId);
+                break;
+            case 6:
+                insertTempValue(value,equipId);
+                break;
+        }
+    }
+
+    // 插入管道流量 数据
+    private void insertPipeValue(String value,Integer equipId) {
+        PipeEntity entity = new PipeEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+
+
+    // 插入累积管道流量 数据
+    private void insertPipeSumValue(String value,Integer equipId) {
+        PipeEntity entity = new PipeEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+
+    // 插入压力数据
+    private void insertPressValue(String value,Integer equipId) {
+        PressEntity entity = new PressEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+    // 插入压力露点数据
+    private void insertPressLDValue(String value,Integer equipId) {
+        PressLdEntity entity = new PressLdEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+
+    // 插入电量数据
+    private void insertPowerValue(String value,Integer equipId) {
+        PowerEntity  entity = new PowerEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+
+    // 插入温度数据
+    private void insertTempValue(String value,Integer equipId) {
+        TempEntity  entity  =  new TempEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+
     /**
      * 读变量的值 如果是short和int直接返回字符串； 如果是long类型的数组,返回数字内容间加点，对应long，数组，大小为6
      * 如果是float类型的数组,返回数字内容间加逗号，对应float，数组，大小为20
@@ -70,8 +152,9 @@ public class CollectThread implements Runnable {
         try {
             //  int type = state.getValue().getType();
             // JIVariant.VT_UI4
+            // float 类型
             if (type == 1) {
-                int value = jIVariant.getObjectAsInt();
+                float value = jIVariant.getObjectAsFloat();
                 return value + "";
             } else if (type == 2) {
                 //  JIVariant.VT_I2
@@ -80,7 +163,8 @@ public class CollectThread implements Runnable {
             } else if (type == 3) {
                 // JIVariant.VT_UI4
                 // long
-                long value = jIVariant.getObjectAsLong();
+                long value = jIVariant.getType();//jIVariant.getObjectAsLong();
+                 // tObjectAsLong();
                 return value + "";
             } else if (type == 4) {
                 // JIVariant.VT_I1

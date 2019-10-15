@@ -1,8 +1,9 @@
 package io.nakong.modules.collect.service.impl;
 
+import com.baomidou.mybatisplus.service.IService;
 import io.nakong.config.OpcConfig;
 import io.nakong.modules.collect.entity.PipeEntity;
-import io.nakong.modules.collect.service.PipeService;
+import io.nakong.modules.collect.service.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -42,6 +43,18 @@ public class CollectInitService {
     @Autowired
     PipeService pipeService;
 
+    @Autowired
+    PressService pressService;
+
+    @Autowired
+    PressLdService  pressLdService;
+
+    @Autowired
+    TempService tempService;
+
+    @Autowired
+    PowerService  powerService;
+
    @PostConstruct
     public void printProperties() {
         // 连接信息
@@ -55,18 +68,31 @@ public class CollectInitService {
         ci.setClsid(opcConfig.getClsid()); // KEPServer的注册表ID，可以在“组件服务”里看到
         final Server server = new Server(ci, Executors.newSingleThreadScheduledExecutor());
         String[] items = opcConfig.getItemDetail();
+       IService service =  null;
 
         // 把变量名称 从数据库取出放到 cache中
         try {
             server.connect();
-            if(ArrayUtils.isNotEmpty(items)){
-                for (String item : items) {
-                    // 查询数据库对应的变量名 和设备关系
-                    final AccessBase access = new SyncAccess(server, 500);
-                    String [] detail = item.split("-");
-                    new Thread(new CollectThread(pipeService, access, detail[0], Integer.parseInt(detail[1]))).run();
+
+                if(ArrayUtils.isNotEmpty(items)){
+                    for (String item : items) {
+                        // 查询数据库对应的变量名 和设备关系
+                        final AccessBase access = new SyncAccess(server, 500);
+                        String [] detail = item.split("-");
+                        String paramName = detail[0];
+                        Integer dataType = Integer.parseInt(detail[1]);
+                        int serviceType = Integer.parseInt(detail[2]);
+                        //     public CollectThread(IService insertService, AccessBase access, String item, int vt_type,int collecType) {
+                        service = getServiceImpl(serviceType);
+                        new Thread(new CollectThread(service, access, paramName,dataType,serviceType)).run();
+                    }
                 }
-            }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (JIException e) {
@@ -86,5 +112,29 @@ public class CollectInitService {
         // 电量
         //
 
+    }
+
+//    压力  1
+//    瞬时流量 2
+//    累积流量 3
+//    电量 4
+//    压力露点 5
+//    温度 6
+    private IService getServiceImpl(int serviceType) {
+         switch (serviceType) {
+             case 1:
+                 return pressService;
+             case 2:
+                 return pipeService;
+             case 3:
+                 return pipeService;
+             case 4:
+                 return powerService;
+             case 5:
+                 return pressLdService;
+             case 6:
+                 return tempService;
+         }
+         return null;
     }
 }

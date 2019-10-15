@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "io.nakong")
-@PropertySource("classpath:server.properties")
+@PropertySource(value={"classpath:server.properties"}, encoding = "utf-8")
 public class OpcConfig {
 
     protected Logger logger = LoggerFactory.getLogger(OpcConfig.class);
