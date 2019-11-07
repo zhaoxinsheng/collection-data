@@ -44,6 +44,13 @@ public class CollectInitService {
     PipeService pipeService;
 
     @Autowired
+    PipeSsService pipeSsService;
+
+    @Autowired
+    PipeLjService pipeLjService;
+
+
+    @Autowired
     PressService pressService;
 
     @Autowired
@@ -55,7 +62,7 @@ public class CollectInitService {
     @Autowired
     PowerService  powerService;
 
-   @PostConstruct
+   //  @PostConstruct
     public void printProperties() {
         // 连接信息
         final ConnectionInformation ci = new ConnectionInformation();
@@ -68,7 +75,7 @@ public class CollectInitService {
         ci.setClsid(opcConfig.getClsid()); // KEPServer的注册表ID，可以在“组件服务”里看到
         final Server server = new Server(ci, Executors.newSingleThreadScheduledExecutor());
         String[] items = opcConfig.getItemDetail();
-       IService service =  null;
+        IService service =  null;
 
         // 把变量名称 从数据库取出放到 cache中
         try {
@@ -127,13 +134,15 @@ public class CollectInitService {
              case 2:
                  return pipeService;
              case 3:
-                 return pipeService;
+                 return pipeLjService;
              case 4:
                  return powerService;
              case 5:
                  return pressLdService;
              case 6:
                  return tempService;
+             case 7:
+                 return pipeSsService;
          }
          return null;
     }

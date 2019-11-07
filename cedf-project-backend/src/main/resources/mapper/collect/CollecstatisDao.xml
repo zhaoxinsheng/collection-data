@@ -123,35 +123,35 @@
     </select>
 
     <select id="pressDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') date,sum(t.collec_value) data
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data,t.equip_id  equipId
         from  t_press t
         where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
-        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i'),t.equip_id
     </select>
 
     <select id="pipeDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data,t.equip_id  equipId
         from  t_pipe t
         where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
-        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i'),t.equip_id
     </select>
     <select id="powerDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data,t.equip_id  equipId
         from  t_power t
         where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
-        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i'),t.equip_id
     </select>
     <select id="ldDataPageList"  parameterType="io.nakong.common.page.Page"  resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data,t.equip_id  equipId
         from  t_press_ld t
         where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
-        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i'),t.equip_id
     </select>
     <select id="tempDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data,t.equip_id  equipId
         from  t_temp t
         where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
-        group by date_format(t.insert_time, '%Y-%m-%d %H:%i')
+        group by date_format(t.insert_time, '%Y-%m-%d %H:%i'),t.equip_id
     </select>
 
 <!-- 空气成本 excel  -->

@@ -266,7 +266,7 @@ public class CollecstatisController {
         String unitName = getUnitName(1);
 
         List<CompareDataEntity>   entitys = collecstatisService.pressDataPageList(pageParam);
-        getEntities(entitys);
+        entitys = getEntities(entitys);
         PageUtils pageUtils  = new PageUtils(entitys,pageParam.getTotal(),getLimit(params),getCurrentPage(params));
         return R.ok().put("page", pageUtils);
     }
@@ -658,17 +658,19 @@ public class CollecstatisController {
     }
 
 
-    private void getEntities(List<CompareDataEntity> entities) {
+    private List<CompareDataEntity>  getEntities(List<CompareDataEntity> entities) {
+        List<CompareDataEntity>  entities2 = entities;
         if (CollectionUtils.isNotEmpty(entities)) {
-            entities.stream().map(x -> {
-                EquipmentEntity equipmentEntity = equipmentService.selectById(x.getEquipId());
-                if (equipmentEntity != null) {
-                    x.setName(equipmentEntity.getName());
-                    x.setUnitName(equipmentEntity.getCollecUnit());
+            entities2 = entities.stream().map(x -> {
+                EquipColorEntity equipColorEntity = equipColorService.selectById(x.getEquipId());
+                if (equipColorEntity != null) {
+                    x.setName(equipColorEntity.getVarname());
+                    x.setUnitName(equipColorEntity.getUnit());
                 }
                 return x;
-            });
+            }).collect(Collectors.toList());
         }
+        return entities2;
     }
 
 
@@ -766,7 +768,7 @@ public class CollecstatisController {
         String unitName = null;
         switch (compareType) {
             case 1:
-                unitName = "Pa";
+                unitName = "Bar";
                 break;
             case 2:
                 unitName = "kW·h";

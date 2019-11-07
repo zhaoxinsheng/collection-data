@@ -69,7 +69,7 @@ public class CollectThread implements Runnable {
                 insertPipeValue(value,equipId);
                 break;
             case 3:
-                insertPipeSumValue(value,equipId);
+                insertLJllValue(value,equipId);
                 break;
             case 4:
                 insertPowerValue(value,equipId);
@@ -79,6 +79,12 @@ public class CollectThread implements Runnable {
                 break;
             case 6:
                 insertTempValue(value,equipId);
+                break;
+            case 7:
+                insertSsllValue(value,equipId);
+                break;
+            case 8:
+
                 break;
         }
     }
@@ -95,14 +101,14 @@ public class CollectThread implements Runnable {
 
 
     // 插入累积管道流量 数据
-    private void insertPipeSumValue(String value,Integer equipId) {
-        PipeEntity entity = new PipeEntity();
-        entity.setCollecTime(new Date());
-        entity.setCollecValue(value);
-        entity.setInsertTime(new Date());
-        entity.setEquipId(String.valueOf(equipId));
-        insertService.insert(entity);
-    }
+//    private void insertPipeSumValue(String value,Integer equipId) {
+//        PipeEntity entity = new PipeEntity();
+//        entity.setCollecTime(new Date());
+//        entity.setCollecValue(value);
+//        entity.setInsertTime(new Date());
+//        entity.setEquipId(String.valueOf(equipId));
+//        insertService.insert(entity);
+//    }
 
     // 插入压力数据
     private void insertPressValue(String value,Integer equipId) {
@@ -136,6 +142,24 @@ public class CollectThread implements Runnable {
     // 插入温度数据
     private void insertTempValue(String value,Integer equipId) {
         TempEntity  entity  =  new TempEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+    // 插入瞬时流量
+    private void insertSsllValue(String value,Integer equipId) {
+        PipeSsEntity entity = new PipeSsEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+    // 插入累计流量
+    private void insertLJllValue(String value,Integer equipId) {
+        PipeLjEntity entity = new PipeLjEntity();
         entity.setCollecTime(new Date());
         entity.setCollecValue(value);
         entity.setInsertTime(new Date());
