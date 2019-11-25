@@ -20,8 +20,20 @@ public class CollectThread implements Runnable {
 
     AccessBase access;
     String item;
+    // 数据类型
     int vt_type;
     IService insertService;
+    // 采集类型
+    /**
+        1	press	压力
+        2	power	电流
+        3	pipe	流量
+        4	temp	温度
+
+        8	pipess	瞬时流量
+        9	pipelj	累积流量
+        10	templd	露点
+    **/
     int collecType;
 
     public CollectThread(IService insertService, AccessBase access, String item, int vt_type,int collecType) {
@@ -44,6 +56,8 @@ public class CollectThread implements Runnable {
                         Integer equipId = CacheUtils.getValue(item);
                         equipId = equipId == null ? 1 : equipId;
                         insertValue(value,equipId);
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -185,9 +199,10 @@ public class CollectThread implements Runnable {
                 short value = jIVariant.getObjectAsShort();
                 return value + "";
             } else if (type == 3) {
-                // JIVariant.VT_UI4
+                // JIVariant.VT_UI4bbx
                 // long
-                long value = jIVariant.getType();//jIVariant.getObjectAsLong();
+               // long value = jIVariant.getType();//jIVariant.getObjectAsLong();
+                int value = jIVariant.getObjectAsInt();//jIVariant.getObjectAsLong();
                  // tObjectAsLong();
                 return value + "";
             } else if (type == 4) {

@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class CacheUtils {
 
-    static Cache<String,Integer> paramCache = CacheBuilder.newBuilder().maximumSize(2000).build();
+   private static Cache<String,Integer> paramCache = CacheBuilder.newBuilder().maximumSize(20000).build();
 
     /**
      * 设置缓存值

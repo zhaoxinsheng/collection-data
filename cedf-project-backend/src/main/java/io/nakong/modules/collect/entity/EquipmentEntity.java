@@ -52,7 +52,7 @@ public class EquipmentEntity implements Serializable {
 	 * 
 	 */
 	private String collecUnit;
-	/**
+	/**collecTypeName
 	 * 
 	 */
 	private Integer collecType;

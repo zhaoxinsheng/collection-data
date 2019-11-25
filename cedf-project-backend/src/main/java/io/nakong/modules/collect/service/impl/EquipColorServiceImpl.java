@@ -7,6 +7,8 @@ import io.nakong.modules.collect.entity.EquipColorEntity;
 import io.nakong.modules.collect.service.EquipColorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -38,5 +40,10 @@ public class EquipColorServiceImpl extends ServiceImpl<EquipColorDao, EquipColor
     @Override
    public EquipColorEntity selectByVarName(String varName){
         return equipColorDao.selectByVarName(varName);
+    }
+
+    @Override
+    public List<EquipColorEntity> selectAllRecord(){
+        return equipColorDao.selectAllRecord();
     }
 }

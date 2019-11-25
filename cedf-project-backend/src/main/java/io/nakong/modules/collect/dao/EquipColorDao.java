@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 
  * 
@@ -25,4 +27,10 @@ public interface EquipColorDao extends BaseMapper<EquipColorEntity> {
      * @return
      */
     EquipColorEntity  selectByVarName(@Param("varname") String varname);
+
+    /**
+     * 获取所有数据
+     * @return
+     */
+    List<EquipColorEntity> selectAllRecord();
 }

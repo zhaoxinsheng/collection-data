@@ -5,6 +5,7 @@ import io.nakong.common.utils.PageUtils;
 import io.nakong.modules.collect.entity.EquipColorEntity;
 
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,5 +22,7 @@ public interface EquipColorService extends IService<EquipColorEntity> {
     EquipColorEntity queryByCollectType(String equipId,int collectType);
 
     EquipColorEntity selectByVarName(String varName);
+
+    List<EquipColorEntity> selectAllRecord();
 }
 

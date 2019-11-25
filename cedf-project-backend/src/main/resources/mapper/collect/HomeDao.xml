@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.collect.dao.HomeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nakong.modules.collect.entity.HomeEntity" id="homeEntity">
+
+        <result property="devName1"    column="devName1"/>
+        <result property="devPower1"    column="devPower1"/>
+        <result property="devLd1"    column="devLd1"/>
+        <result property="devPress1"    column="devPress1"/>
+
+        <result property="devName2"    column="devName2"/>
+        <result property="devPower2"    column="devPower2"/>
+        <result property="devLd2"    column="devLd2"/>
+        <result property="devPress2"    column="devPress2"/>
+
+        <result property="devName3"    column="devName3"/>
+        <result property="devPower3"    column="devPower3"/>
+        <result property="devLd3"    column="devLd3"/>
+        <result property="devPress3"    column="devPress3"/>
+
+        <result property="devName4"    column="devName4"/>
+        <result property="devPower4"    column="devPower4"/>
+        <result property="devLd4"    column="devLd4"/>
+        <result property="devPress4"    column="devPress4"/>
+
+        <result property="devName5"    column="devName5"/>
+        <result property="devPower5"    column="devPower5"/>
+        <result property="devLd5"    column="devLd5"/>
+        <result property="devPress5"    column="devPress5"/>
+
+        <result property="devName6"    column="devName6"/>
+        <result property="devPower6"    column="devPower6"/>
+        <result property="devLd6"    column="devLd6"/>
+        <result property="devPress6"    column="devPress6"/>
+
+        <result property="devName7"    column="devName7"/>
+        <result property="devPower7"    column="devPower7"/>
+        <result property="devLd7"    column="devLd7"/>
+        <result property="devPress7"    column="devPress7"/>
+
+        <result property="devName8"    column="devName8"/>
+        <result property="devPower8"    column="devPower8"/>
+        <result property="devLd8"    column="devLd8"/>
+        <result property="devPress8"    column="devPress8"/>
+
+        <result property="devName9"    column="devName9"/>
+        <result property="devPower9"    column="devPower9"/>
+        <result property="devLd9"    column="devLd9"/>
+        <result property="devPress9"    column="devPress9"/>
+    </resultMap>
+    <select id="getAllList" resultType="io.nakong.modules.collect.entity.HomeEntity">
+     select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'1' type ,te.`name` equipName  from t_press t,t_equip_color tec ,t_equipment  te
+       where t.equip_id = tec.id
+      and tec.equip_id = te.id
+			and tec.collect_type ='1'
+			and t.equip_id != '1'
+			and te.id in (53,54,55,56,57,58,59,60,61)
+		  group by t.equip_id
+			union all
+  select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'2' type,te.`name` equipName  from t_power t,t_equip_color tec ,t_equipment  te
+    where t.equip_id = tec.id
+      and tec.equip_id = te.id
+			and tec.collect_type ='2'
+			and t.equip_id != '1'
+			and te.id in (53,54,55,56,57,58,59,60,61)
+		  group by t.equip_id
+		 union all
+  select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'4' type,te.`name` equipName  from t_temp t,t_equip_color tec ,t_equipment  te
+     where t.equip_id = tec.id
+      and tec.equip_id = te.id
+			and tec.collect_type ='4'
+			and t.equip_id != '1'
+			and te.id in (53,54,55,56,57,58,59,60,61)
+		  group by t.equip_id
+
+	union all
+	  select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'10' type,te.`name` equipName  from t_press_ld t,t_equip_color tec ,t_equipment  te
+     where t.equip_id = tec.id
+      and tec.equip_id = te.id
+			and tec.collect_type ='10'
+			and t.equip_id != '1'
+			and te.id = 62
+		  group by t.equip_id
+     </select>
+
+    <select id="getAllPipeList" resultType="io.nakong.modules.collect.entity.HomePipeEntity">
+
+      select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'8' type,te.`name` equipName
+        from t_pipe_ss t,t_equip_color tec ,t_equipment  te
+    where t.equip_id = tec.id
+          and tec.equip_id = te.id
+                and tec.collect_type ='8'
+                and t.equip_id != '1'
+                and te.id in (63,64,65,69,70,71,72)
+              group by t.equip_id
+                union all
+      select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'9' type,te.`name` equipName
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+    where t.equip_id = tec.id
+          and tec.equip_id = te.id
+                and tec.collect_type ='9'
+                and t.equip_id != '1'
+                and te.id in (63,64,65,69,70,71,72)
+              group by t.equip_id
+    </select>
+    <select id="getTotalpresslist" resultType="io.nakong.modules.collect.entity.HomePipeEntity">
+	 SELECT
+	      DATE_FORMAT(t.insert_time,'%H') AS hour,
+	      t.collec_value  collectValue
+        FROM
+	      t_press t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+			   and t.equip_id != '1'
+		     and tec.collect_type ='1'
+			   and tec.id in (135,136)
+	       and  date( t.insert_time ) = curdate( )
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
+    </select>
+
+    <select id="getTotaltemplist" resultType="io.nakong.modules.collect.entity.HomePipeEntity">
+        SELECT
+	      DATE_FORMAT(t.insert_time,'%H') AS hour,
+	       t.collec_value  collectValue
+        FROM
+	      t_temp t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+			   and t.equip_id != '1'
+		     and tec.collect_type ='4'
+			   and tec.id in (135,136)
+	       and  date( t.insert_time ) = curdate( )
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
+    </select>
+
+
+</mapper>

@@ -1,7 +1,10 @@
 package io.nakong.modules.collect.service.impl;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.service.IService;
+import io.nakong.common.utils.CacheUtils;
 import io.nakong.config.OpcConfig;
+import io.nakong.modules.collect.entity.EquipColorEntity;
 import io.nakong.modules.collect.entity.PipeEntity;
 import io.nakong.modules.collect.service.*;
 import org.apache.commons.collections4.CollectionUtils;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 /**
@@ -62,8 +66,16 @@ public class CollectInitService {
     @Autowired
     PowerService  powerService;
 
-   //  @PostConstruct
+    @Autowired
+    EquipColorService  colorService;
+
+    private static int period = 1000 * 60;
+
+   @PostConstruct
     public void printProperties() {
+
+//       初始化对象放到cache对象中
+         initEquipColor();
         // 连接信息
         final ConnectionInformation ci = new ConnectionInformation();
         // 192.168.0.193
@@ -80,11 +92,10 @@ public class CollectInitService {
         // 把变量名称 从数据库取出放到 cache中
         try {
             server.connect();
-
                 if(ArrayUtils.isNotEmpty(items)){
                     for (String item : items) {
                         // 查询数据库对应的变量名 和设备关系
-                        final AccessBase access = new SyncAccess(server, 500);
+                        final AccessBase access = new SyncAccess(server, period);
                         String [] detail = item.split("-");
                         String paramName = detail[0];
                         Integer dataType = Integer.parseInt(detail[1]);
@@ -121,6 +132,15 @@ public class CollectInitService {
 
     }
 
+    private void initEquipColor() {
+        List<EquipColorEntity> equips =  colorService.selectAllRecord();
+        if(CollectionUtils.isNotEmpty(equips)){
+            for (EquipColorEntity ec : equips) {
+                CacheUtils.setValue(ec.getVarname().split("-")[0],ec.getId());CacheUtils.getValue("BY_KYZ.G1.排气压力_空压机1-1-1");
+            }
+        }
+
+    }
 //    压力  1
 //    瞬时流量 2
 //    累积流量 3
