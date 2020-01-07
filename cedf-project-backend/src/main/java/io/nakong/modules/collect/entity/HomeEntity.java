@@ -20,46 +20,55 @@ public class HomeEntity implements Serializable {
    float   devPower1;
    float   devLd1;
    float   devPress1;
+    float  devStatus1;
 
     String devName2 ;
     float devPower2 ;
     float devLd2 ;
     float devPress2 ;
+    float  devStatus2;
 
     String devName3 ;
     float devPower3 ;
     float devLd3 ;
     float devPress3 ;
+    float  devStatus3;
 
     String devName4 ;
     float devPower4 ;
     float  devLd4 ;
     float devPress4 ;
+    float  devStatus4;
 
     String devName5 ;
     float devPower5 ;
     float devLd5 ;
     float devPress5 ;
+    float  devStatus5;
 
     String devName6 ;
     float devPower6 ;
     float devLd6 ;
     float devPress6 ;
+    float  devStatus6;
 
     String devName7 ;
     float devPower7 ;
     float devLd7 ;
     float  devPress7 ;
+    float  devStatus7;
 
     String devName8 ;
     float devPower8 ;
     float devLd8 ;
     float devPress8 ;
+    float  devStatus8;
 
     String devName9 ;
     float devPower9 ;
     float devLd9 ;
     float devPress9 ;
+    float  devStatus9;
 
     public int getEquipId() {
         return equipId;
@@ -379,5 +388,77 @@ public class HomeEntity implements Serializable {
 
     public void setEquipName(String equipName) {
         this.equipName = equipName;
+    }
+
+    public float getDevStatus1() {
+        return devStatus1;
+    }
+
+    public void setDevStatus1(float devStatus1) {
+        this.devStatus1 = devStatus1;
+    }
+
+    public float getDevStatus2() {
+        return devStatus2;
+    }
+
+    public void setDevStatus2(float devStatus2) {
+        this.devStatus2 = devStatus2;
+    }
+
+    public float getDevStatus3() {
+        return devStatus3;
+    }
+
+    public void setDevStatus3(float devStatus3) {
+        this.devStatus3 = devStatus3;
+    }
+
+    public float getDevStatus4() {
+        return devStatus4;
+    }
+
+    public void setDevStatus4(float devStatus4) {
+        this.devStatus4 = devStatus4;
+    }
+
+    public float getDevStatus5() {
+        return devStatus5;
+    }
+
+    public void setDevStatus5(float devStatus5) {
+        this.devStatus5 = devStatus5;
+    }
+
+    public float getDevStatus6() {
+        return devStatus6;
+    }
+
+    public void setDevStatus6(float devStatus6) {
+        this.devStatus6 = devStatus6;
+    }
+
+    public float getDevStatus7() {
+        return devStatus7;
+    }
+
+    public void setDevStatus7(float devStatus7) {
+        this.devStatus7 = devStatus7;
+    }
+
+    public float getDevStatus8() {
+        return devStatus8;
+    }
+
+    public void setDevStatus8(float devStatus8) {
+        this.devStatus8 = devStatus8;
+    }
+
+    public float getDevStatus9() {
+        return devStatus9;
+    }
+
+    public void setDevStatus9(float devStatus9) {
+        this.devStatus9 = devStatus9;
     }
 }

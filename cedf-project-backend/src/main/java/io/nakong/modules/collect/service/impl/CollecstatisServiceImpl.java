@@ -35,20 +35,20 @@ public class CollecstatisServiceImpl extends ServiceImpl<CollecstatisDao, Collec
     }
 
     @Override
-    public List<CollecstatisEntity>   comparisonChartByDay(Integer compareType, String equipId, Date startDate, Date endDate) {
+    public List<CollecstatisEntity>   comparisonChartByDay(Integer compareType, List<String> equipId, Date startDate, Date endDate) {
         return collecstatisDao.comparisonChartByDay(compareType, equipId, startDate, endDate);
     }
 
     @Override
-    public List<CollecstatisEntity>   comparisonChartByWeek(Integer compareType, String equipId, Date startDate, Date endDate) {
+    public List<CollecstatisEntity>   comparisonChartByWeek(Integer compareType, List<String> equipId, Date startDate, Date endDate) {
         return collecstatisDao.comparisonChartByWeek(compareType, equipId, startDate, endDate);
     }
     @Override
-    public List<CollecstatisEntity>   comparisonChartByMonth(Integer compareType, String equipId, Date startDate, Date endDate) {
+    public List<CollecstatisEntity>   comparisonChartByMonth(Integer compareType, List<String> equipId, Date startDate, Date endDate) {
         return collecstatisDao.comparisonChartByMonth(compareType, equipId, startDate, endDate);
     }
     @Override
-    public List<CollecstatisEntity>   comparisonChartByYear(Integer compareType, String equipId, Date startDate, Date endDate) {
+    public List<CollecstatisEntity>   comparisonChartByYear(Integer compareType, List<String> equipId, Date startDate, Date endDate) {
         return collecstatisDao.comparisonChartByYear(compareType, equipId, startDate, endDate);
     }
     @Override
@@ -147,6 +147,17 @@ public class CollecstatisServiceImpl extends ServiceImpl<CollecstatisDao, Collec
     }
 
     @Override
+    public List<CompareDataEntity> powerRatePageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return collecstatisDao.powerRatePageList(pageParam);
+    }
+
+    @Override
+    public List<CompareDataEntity> powerAllRatePageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
+        return collecstatisDao.powerAllRatePageList(pageParam);
+    }
+
+
+    @Override
     public  List<CompareDataEntity> sumPipePageList(io.nakong.common.page.Page<CompareDataEntity> page) {
         return  collecstatisDao.queryListPipePageList(page);
 
@@ -156,4 +167,98 @@ public class CollecstatisServiceImpl extends ServiceImpl<CollecstatisDao, Collec
     public List<CompareDataEntity> sumTempDataPageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) {
         return null;
     }
+
+
+    // 统计 每天 晚上 1点 统计
+    public  int  dayStatisData() {
+          collecstatisDao.dayPressStatisData();
+          collecstatisDao.dayPipeStatisData();
+          collecstatisDao.dayPowerStatisData();
+          collecstatisDao.dayTempStatisData();
+          collecstatisDao.dayPressLdStatisData();
+         // collecstatisDao.dayStatusStatisData();
+        return 1;
+    }
+
+    // 统计 每天 晚上 2点 周统计数据
+    public  int  weekStatisData() {
+        // 删除这一周的统计数据  重新统计
+        collecstatisDao.deleteWeekPressStatisData();
+
+        collecstatisDao.weekPressStatisData();
+        return 1;
+    }
+
+    // 统计 每天 晚上 3点 月统计数据
+    public  int  monthStatisData() {
+        //删除这一个月的统计数据 ，重新统计
+        collecstatisDao.deleteMonthPressStatisData();
+
+        collecstatisDao.monthPressStatisData();
+        return 1;
+    }
+
+    // 统计 每天 晚上  4点 年统计数据
+
+    public int  yearStatisData() {
+        //删除这几年的统计数据 ，重新统计
+        collecstatisDao.deleteYearPressStatisData();
+        collecstatisDao.yearPressStatisData();
+        return 1;
+    }
+
+    /**
+     *  获取当月的手机信息
+     * @return
+     */
+    @Override
+    public CompareDataEntity getCurMonthCollectData(Integer collectType) {
+        return collecstatisDao.getCurMonthCollectData(collectType);
+    }
+
+    /**
+     *  获取上月的收集数据
+     * @return
+     */
+    @Override
+    public  CompareDataEntity getLastMonthCollectData(Integer collectType){
+        return collecstatisDao.getLastMonthCollectData(collectType);
+    }
+
+    /**
+     *  获取当季度的收集数据
+     * @return
+     */
+    @Override
+    public CompareDataEntity getCurQuarCollectData(Integer collectType){
+        return collecstatisDao.getCurQuarCollectData(collectType);
+    }
+
+    /**
+     * 获取上个季度
+     * @return
+     */
+    @Override
+    public CompareDataEntity getLastQuarCollectData(Integer collectType){
+        return collecstatisDao.getLastQuarCollectData(collectType);
+    }
+
+    /**
+     *  获取去年数据
+     * @return
+     */
+    @Override
+    public CompareDataEntity getLastYearCollectData(Integer collectType){
+        return collecstatisDao.getLastYearCollectData(collectType);
+    }
+
+    /**
+     * 获取今年数据
+     * @return
+     */
+    @Override
+    public CompareDataEntity getCurYearCollectData(Integer collectType){
+        return collecstatisDao.getCurYearCollectData(collectType);
+    }
+
 }

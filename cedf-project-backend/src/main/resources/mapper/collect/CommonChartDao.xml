@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.nakong.modules.collect.dao.CommonDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.nakong.modules.collect.entity.CommonEntity" id="commonEntity">
+        <result property="dateInt" column="dateInt"/>
+        <result property="value" column="value"/>
+    </resultMap>
+    <!-- 总管压力 -->
+    <select id="getPressDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%H') AS dateInt,
+                  t.collec_value  value
+                FROM
+                  t_press t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+                       and tec.id in (135,136)
+           and   DATE_FORMAT(t.insert_time,'%Y-%m-%d') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
+     </select>
+
+
+    <select id="getPressMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%d') AS dateInt,
+                  t.collec_value  value
+                FROM
+                  t_press t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+                       and tec.id in (135,136)
+           and   DATE_FORMAT(t.insert_time,'%Y-%m') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m-%d')
+     </select>
+
+
+
+
+    <select id="getPressYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%m') AS dateInt,
+                  t.collec_value  value
+                FROM
+                  t_press t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+                       and tec.id in (135,136)
+           and   DATE_FORMAT(t.insert_time,'%Y') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m');
+     </select>
+
+    <!-- 总管温度 -->
+    <select id="getTempDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+	      DATE_FORMAT(t.insert_time,'%H') AS dateInt,
+	       t.collec_value  value
+        FROM
+	      t_temp t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+			   and t.equip_id != '1'
+		     and tec.collect_type ='4'
+			   and tec.id in (135,136)
+	       and DATE_FORMAT(t.insert_time,'%Y-%m-%d') = #{date}
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
+    </select>
+
+    <select id="getTempMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+	      DATE_FORMAT(t.insert_time,'%d') AS dateInt,
+	       t.collec_value  value
+        FROM
+	      t_temp t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+			   and t.equip_id != '1'
+		     and tec.collect_type ='4'
+			   and tec.id in (135,136)
+	       and  DATE_FORMAT(t.insert_time,'%Y-%m') = #{date}
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m-%d')
+    </select>
+
+    <select id="getTempYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+	      DATE_FORMAT(t.insert_time,'%m') AS dateInt,
+	       t.collec_value  value
+        FROM
+	      t_temp t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+		 and t.equip_id != '1'
+		  and tec.collect_type ='4'
+	    and tec.id in (135,136)
+	    and  DATE_FORMAT(t.insert_time,'%Y') = #{date}
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m')
+    </select>
+
+    <!-- 压力露点 温度 -->
+    <select id="getTempLdDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+	      DATE_FORMAT(t.insert_time,'%H') AS dateInt,
+	       t.collec_value  value
+        FROM
+	      t_press_ld t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+			   and t.equip_id != '1'
+		     and tec.collect_type ='4'
+	       and DATE_FORMAT(t.insert_time,'%Y-%m-%d') = #{date}
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
+    </select>
+
+    <select id="getTempLdMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+	      DATE_FORMAT(t.insert_time,'%d') AS dateInt,
+	       t.collec_value  value
+        FROM
+	      t_press_ld t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+			   and t.equip_id != '1'
+		     and tec.collect_type ='4'
+	       and  DATE_FORMAT(t.insert_time,'%Y-%m') = #{date}
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m-%d')
+    </select>
+
+    <select id="getTempLdYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+	      DATE_FORMAT(t.insert_time,'%m') AS dateInt,
+	       t.collec_value  value
+        FROM
+	      t_press_ld t ,t_equip_color tec ,t_equipment  te
+        WHERE
+				t.equip_id = tec.id
+         and tec.equip_id = te.id
+		 and t.equip_id != '1'
+		  and tec.collect_type ='4'
+	    and  DATE_FORMAT(t.insert_time,'%Y') = #{date}
+	   GROUP BY
+	      DATE_FORMAT(t.insert_time,'%Y-%m')
+    </select>
+
+</mapper>

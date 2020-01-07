@@ -39,7 +39,7 @@ import io.nakong.modules.sys.service.SysConfigService;
 /**
  * 系统配置信息
  * 
- * @author chenshun
+ * @author chenshunschedule
  * @email sunlightcs@gmail.com
  * @date 2016年12月4日 下午6:55:53
  */

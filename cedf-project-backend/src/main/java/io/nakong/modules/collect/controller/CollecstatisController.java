@@ -61,14 +61,17 @@ public class CollecstatisController {
 
         // dateType(1 当天 2 本周 3 本月 4 本年）
         // collectType 1 压力 Pa  2 电量  kW·h 3 流量 m³ 4 温度 ℃
-        String [] dateArray = null;
-        String [] equidArray = equipIds.split(",");
-        List<DataEntity> dataX = new ArrayList<>();
+        List<String> dateArray = null;
+        List<String> equidArray= Arrays.asList(equipIds.split(","));
+        Map<Integer,List<CollecstatisEntity>> dataX = new HashMap<>();
         String unitName = getUnitName(collectType);
-        if (dateType != 0) {
-            dateArray = getChartData(dateType, dateArray, collectType, equidArray, dataX);
-        }
-
+        Map<String,Object> retMap = null;
+          //  getChartData(int dateType,  int collectType, List<String> equidArray, Map<Integer,List<CollecstatisEntity>> dataList) {
+           retMap = getChartData(dateType,  collectType, equidArray, dataX);
+           if (retMap != null && retMap.size() > 0) {
+               dateArray = ( List<String>)retMap.get("date");
+               dataX = (Map<Integer,List<CollecstatisEntity>> )retMap.get("data");
+           }
         return R.ok().put("data", dataX).put("xais",dateArray).put("unitName",unitName);
     }
 
@@ -79,30 +82,62 @@ public class CollecstatisController {
      */
     @RequestMapping("/comparisonmutichart/xthb/{compareType}/{collectType}")
     public R comparisonMutichart(@PathVariable("compareType") Integer compareType,@PathVariable("collectType") Integer collectType){
-
-
         // collectType 1 压力 Pa  2 电量  kW·h 3 流量 m³ 4 温度 ℃
+        // compareType  1 去年 2 上个月 3 上个季度
         String unitName = getUnitName(collectType);
         CompareDataEntity entity = null,entityLastYear = null;
         switch (compareType) {
             case 1:
-                 entity = collecstatisService.getCollectData(DateUtils.getFirstDayOfYear(),DateUtils.getEndDayOfYear(),collectType);
-                 entityLastYear = collecstatisService.getCollectData(DateUtils.getFirstDayOfLastYear(),DateUtils.getEndDayOfLastYear(),collectType);
+                 entity = collecstatisService.getCurYearCollectData(collectType);
+                 entityLastYear = collecstatisService.getLastYearCollectData(collectType);
+                 if(entity != null){
+                     entity.setName("今年");
+                 }
+                 if(entityLastYear != null) {
+                     entityLastYear.setName("去年");
+                 }
                break;
             case 2:
-                 entity = collecstatisService.getCollectData(DateUtils.getFirstDayOfMonth(),DateUtils.getEndDayOfMonth(),collectType);
-                 entityLastYear = collecstatisService.getCollectData(DateUtils.getFirstDayOfLastMonth(),DateUtils.getEndDayOfLastMonth(),collectType);
+                 entity = collecstatisService.getCurMonthCollectData(collectType);
+                 entityLastYear = collecstatisService.getLastMonthCollectData(collectType);
+                if(entity != null){
+                    entity.setName("本月");
+                }
+                if(entityLastYear != null) {
+                    entityLastYear.setName("上个月");
+                }
                 break;
             case 3:
-                 entity = collecstatisService.getCollectData(DateUtils.getStartDateOfQuarter(),DateUtils.getEndDateOfQuarter(),collectType);
-                 entityLastYear = collecstatisService.getCollectData(DateUtils.getFirstDayOfLastMonth(),DateUtils.getStartDateOfLastQuarter(),collectType);
+                 entity = collecstatisService.getCurQuarCollectData(collectType);
+                 entityLastYear = collecstatisService.getLastQuarCollectData(collectType);
+                if(entity != null){
+                    entity.setName("本季度");
+                }
+                if(entityLastYear != null) {
+                    entityLastYear.setName("上个季度");
+                }
                 break;
             default:
                     break;
-
         }
 
         return R.ok().put("currentData", entity).put("lastData",entityLastYear).put("unitName",unitName);
+    }
+
+    private void setName(Integer compareType, CompareDataEntity entity) {
+        if ( entity != null ) {
+            switch (compareType) {
+                case 1:
+                    entity.setName("");
+                    break;
+                case 2:
+                    entity.setName("");
+                    break;
+                case 3:
+                    entity.setName("");
+                    break;
+            }
+        }
     }
 
 
@@ -117,7 +152,8 @@ public class CollecstatisController {
         Date startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
         Date endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
        List<CompareDataEntity>   entities = collecstatisService.getAirCollectData(startDate,endDate);
-        return R.ok().put("data", getCompareDataEntities(entities)).put("unitName",unitName);
+        //return R.ok().put("data", getCompareDataEntities(entities)).put("unitName",unitName);
+        return R.ok().put("data", entities).put("unitName",unitName);
     }
 
     /**
@@ -263,7 +299,7 @@ public class CollecstatisController {
     @RequestMapping("/comparisonmutichart/pressData")
     public R pressData(@RequestParam Map<String, Object> params){
         io.nakong.common.page.Page<CompareDataEntity>  pageParam = getDateMap(params);
-        String unitName = getUnitName(1);
+//        String unitName = getUnitName(1);
 
         List<CompareDataEntity>   entitys = collecstatisService.pressDataPageList(pageParam);
         entitys = getEntities(entitys);
@@ -338,6 +374,33 @@ public class CollecstatisController {
         return R.ok().put("page", pageUtils);
     }
 
+
+    /**
+     *   气电比数据
+     *
+     */
+    @RequestMapping("/comparisonmutichart/powerRateData")
+    public R powerRateData(@RequestParam Map<String, Object> params){
+
+        io.nakong.common.page.Page<CompareDataEntity>  pageParam = getDateMap(params);
+        pageParam.getMap().put("id",String.valueOf(params.get("deviceId")));
+        List<CompareDataEntity>   entities = null;
+        if ("0".equals(String.valueOf(params.get("deviceId")))) {
+           // 查询所有数据的和
+            entities = collecstatisService.powerAllRatePageList(pageParam);
+            if(CollectionUtils.isNotEmpty(entities)) {
+                for (CompareDataEntity entity : entities) {
+                    entity.setName("总电量");
+                }
+            }
+        } else {
+            entities = collecstatisService.powerRatePageList(pageParam);
+        }
+        PageUtils pageUtils  = new PageUtils(entities,pageParam.getTotal(),getLimit(params),getCurrentPage(params));
+        return R.ok().put("page", pageUtils);
+
+    }
+
     private int getLimit(Map params) {
         return  params.get("limit") == null ? 0 :  Integer.parseInt((String)params.get("limit"));
 
@@ -352,10 +415,13 @@ public class CollecstatisController {
         int limit =  params.get("limit") == null ? 0 :  Integer.parseInt(String.valueOf(params.get("limit")));
         String startDateStr = String.valueOf(params.get("startDate"));
         String endDateStr = String.valueOf(params.get("endDate"));
+        String deviceId = String.valueOf(params.get("deviceId"));
+
         Map<String,Date> dateMap = setSimpleDate(startDateStr,endDateStr);
         Map<String, Serializable> map = new HashMap<>();
         map.put("startDate",dateMap.get("startDate"));
         map.put("endDate",dateMap.get("endDate"));
+        map.put("id",deviceId);
         io.nakong.common.page.Page<CompareDataEntity> pageParam = new io.nakong.common.page.Page<CompareDataEntity>();
         pageParam.setPaging(true);
         pageParam.setMap(map);
@@ -430,7 +496,7 @@ public class CollecstatisController {
 
         String unitName = getUnitName(collectType);
         if (dateType != 0) {
-            dateArray = getChartData(dateType, dateArray, collectType, equidArray, dataX);
+//            dateArray = getChartData(dateType, dateArray, collectType, equidArray, dataX);
         }
         return R.ok().put("data", dataX).put("xais",dateArray).put("unitName",unitName);
 
@@ -607,54 +673,84 @@ public class CollecstatisController {
         return wrapMap(newStartDate,newEndDate);
     }
 
-    private String[] getChartData(int dateType, String[] dateArray, int collectType, String[] equidArray, List<DataEntity> dataX) {
+    private Map<String,Object>  getChartData(int dateType,  int collectType, List<String> equidArray, Map<Integer,List<CollecstatisEntity>> dataList) {
         Date startDate;
         Date endDate;
+        List<String> dateList = null;
+        Map<String,Object> retMap = new HashMap<>();
+
         switch (dateType) {
+            // 当天统计
             case 1:
-                dateArray = DateUtils.getDayHours();
+                // dateArray = DateUtils.getDayHours();
                 startDate = DateUtils.getStartTimeofCurrentDay();
                 endDate = DateUtils.getEndTimeofCurrentDay();
-                for (String equipId : equidArray) {
-                    DataEntity entity = getDataEntity(collectType,equipId, collecstatisService.comparisonChartByDay(collectType, equipId, startDate, endDate));
-                    dataX.add(entity);
+                List<CollecstatisEntity>   retDayList = collecstatisService.comparisonChartByDay(collectType, equidArray, startDate, endDate);
+                if (CollectionUtils.isNotEmpty(retDayList)) {
+                    dataList = retDayList.stream().collect(Collectors.groupingBy(CollecstatisEntity::getEquipId));
+                    dateList = retDayList.stream().map(x->x.getDateStr()).distinct().collect(Collectors.toList());
                 }
-
+                retMap.put("data",dataList);
+                retMap.put("date",dateList);
                 break;
             case 2:
-                dateArray = DateUtils.getDayOfWeek();
+                //本周 统计
+               // dateArray = DateUtils.getDayOfWeek();
                 startDate = DateUtils.getFirstDayofWeek();
                 endDate = DateUtils.getEndDayOfWeek();
 
-                for (String equipId : equidArray) {
-                    DataEntity entity = getDataEntity(collectType,equipId, collecstatisService.comparisonChartByWeek(collectType, equipId, startDate, endDate));
-                    dataX.add(entity);
+                List<CollecstatisEntity>   retWeekList = collecstatisService.comparisonChartByWeek(collectType, equidArray, startDate, endDate);
+                if (CollectionUtils.isNotEmpty(retWeekList)) {
+                    dataList = retWeekList.stream().collect(Collectors.groupingBy(CollecstatisEntity::getEquipId));
+                    dateList = retWeekList.stream().map(x->x.getDateStr()).distinct().collect(Collectors.toList());
                 }
+                retMap.put("data",dataList);
+                retMap.put("date",dateList);
+
+//                for (String equipId : equidArray) {
+//                    DataEntity entity = getDataEntity(collectType,equipId, collecstatisService.comparisonChartByWeek(collectType, equipId, startDate, endDate));
+//                    dataX.add(entity);
+//                }
                 break;
             case 3:
-
-                dateArray = DateUtils.getDayOfMonth();
+                //本月 统计
+//                dateArray = DateUtils.getDayOfMonth();
                 startDate = DateUtils.getFirstDayOfMonth();
                 endDate = DateUtils.getEndDayOfMonth();
-                for (String equipId : equidArray) {
-                    DataEntity entity = getDataEntity(collectType,equipId, collecstatisService.comparisonChartByMonth(collectType, equipId, startDate, endDate));
-                    dataX.add(entity);
+//                for (String equipId : equidArray) {
+////                    DataEntity entity = getDataEntity(collectType,equipId, collecstatisService.comparisonChartByMonth(collectType, equipId, startDate, endDate));
+////                    dataX.add(entity);
+////                }
+
+                List<CollecstatisEntity>   retMonthList = collecstatisService.comparisonChartByMonth(collectType, equidArray, startDate, endDate);
+                if (CollectionUtils.isNotEmpty(retMonthList)) {
+                    dataList = retMonthList.stream().collect(Collectors.groupingBy(CollecstatisEntity::getEquipId));
+                    dateList = retMonthList.stream().map(x->x.getDateStr()).distinct().collect(Collectors.toList());
                 }
+                retMap.put("data",dataList);
+                retMap.put("date",dateList);
                 break;
             case 4:
-
-                dateArray = DateUtils.getMonthOfYear();
+                //本年 统计
+//                dateArray = DateUtils.getMonthOfYear();
                 startDate = DateUtils.getFirstDayOfYear();
                 endDate = DateUtils.getEndDayOfYear();
-                for (String equipId : equidArray) {
-                    DataEntity entity = getDataEntity(collectType,equipId, collecstatisService.comparisonChartByYear(collectType, equipId, startDate, endDate));
-                    dataX.add(entity);
+                List<CollecstatisEntity>   retYearList = collecstatisService.comparisonChartByYear(collectType, equidArray, startDate, endDate);
+                if (CollectionUtils.isNotEmpty(retYearList)) {
+                    dataList = retYearList.stream().collect(Collectors.groupingBy(CollecstatisEntity::getEquipId));
+                    dateList = retYearList.stream().map(x->x.getDateStr()).distinct().collect(Collectors.toList());
                 }
+//                for (String equipId : equidArray) {
+//                    DataEntity entity = getDataEntity(collectType,equipId, collecstatisService.comparisonChartByYear(collectType, equipId, startDate, endDate));
+//                    dataX.add(entity);
+//                }
+                retMap.put("data",dataList);
+                retMap.put("date",dateList);
                 break;
             default:
                 break;
         }
-        return dateArray;
+        return retMap;
     }
 
 

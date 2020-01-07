@@ -1,6 +1,8 @@
 package io.nakong;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import io.nakong.common.utils.R;
 
 
@@ -18,17 +20,37 @@ public class TestJson {
 
      public static void main (String [] args) {
 
-         ArrayList list  = new ArrayList();
 
-//         JSON.JSON
-         for (int i = 0 ;i< 4 ;i++) {
-            Map map = new HashMap<>();
-            map.put("id",1);
-            map.put("name","测试");
+         JSONArray array =  new JSONArray();
+         JSONObject singleObject = new JSONObject();
+         singleObject.put("id","0");
+         singleObject.put("name","总电量");
+         array.add(singleObject);
 
-            list.add(map);
+
+
+
+         JSONArray array2 = new JSONArray();
+
+         JSONObject singleObject1 = new JSONObject();
+         singleObject1.put("id","1");
+         singleObject1.put("name","总电量1");
+
+         JSONObject singleObject2 = new JSONObject();
+         singleObject2.put("id","2");
+         singleObject2.put("name","总电量2");
+
+//         array2.add(singleObject1);
+//         array2.add(0,singleObject2);
+
+         array2.addAll( array);
+
+         array2.add(singleObject1);
+
+         for(int k =0;k< array2.size();k++ ){
+             JSONObject o =  array2.getJSONObject(k);
+             System.out.println(o.toJSONString());
          }
 
-         System.out.println(JSON.toJSONString( R.ok().put("data",list)));
      }
 }

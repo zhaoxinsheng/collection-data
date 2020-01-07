@@ -77,9 +77,10 @@ public class ScheduleJobController {
 	@RequiresPermissions("sys:schedule:save")
 	public R save(@RequestBody ScheduleJobEntity scheduleJob){
 		ValidatorUtils.validateEntity(scheduleJob);
-		
-		scheduleJobService.save(scheduleJob);
-		
+
+//        ScheduleJobService scheduleJobService = this.scheduleJobService;
+        scheduleJobService.save(scheduleJob);
+
 		return R.ok();
 	}
 	
@@ -91,7 +92,7 @@ public class ScheduleJobController {
 	@RequiresPermissions("sys:schedule:update")
 	public R update(@RequestBody ScheduleJobEntity scheduleJob){
 		ValidatorUtils.validateEntity(scheduleJob);
-				
+
 		scheduleJobService.update(scheduleJob);
 		
 		return R.ok();

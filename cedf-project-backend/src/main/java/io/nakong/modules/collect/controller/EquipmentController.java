@@ -31,7 +31,7 @@ import io.nakong.common.utils.R;
  *
  * @author tom
  * @email zhaoxinsheng@codyy.com
- * @date 2019-05-29 21:58:32
+ * @date 2019-05-29 21:58:32equiplist
  */
 @RestController
 @RequestMapping("collect/equipment")
@@ -65,7 +65,46 @@ public class EquipmentController {
         String type = (String)params.get("type");
         EntityWrapper wrapper = new EntityWrapper<EquipmentEntity>();
         wrapper.eq(true,"type",1);
+        wrapper.ne(true,"code","status");
+
         return R.ok().put("data", wrapJsonArray(equipmentTypeService.selectList(wrapper)));
+    }
+
+
+    /**
+     * 采集类型列表
+     * equipnamelist
+     */
+    @RequestMapping("/equipnamelist")
+//    @RequiresPermissions("collect:equipment:list")
+    public R equiplist(@RequestParam Map<String, String> params){
+
+        EntityWrapper wrapper = new EntityWrapper<EquipmentEntity>();
+        ArrayList<Integer> lists = new ArrayList<Integer>(){{
+            add(53);
+            add(54);
+            add(55);
+            add(56);
+            add(57);
+            add(58);
+            add(59);
+            add(60);
+            add(61);
+           // add(63);
+        }};
+        wrapper.in("id",lists);
+        wrapper.orderBy("insert_date", true);
+
+        JSONArray array = new JSONArray();
+        if (params != null && "power".equals(params.get("type")) && array != null) {
+            JSONObject singleObject = new JSONObject();
+            singleObject.put("id","0");
+            singleObject.put("name","总电量");
+            array.add(singleObject);
+    }
+        JSONArray arrayData = wrapEquipJsonArray(equipmentService.selectList(wrapper));
+        array.addAll(arrayData);
+        return R.ok().put("data",array );
     }
 
 
@@ -73,13 +112,16 @@ public class EquipmentController {
      * 采集类型列表
      */
     @RequestMapping("/equiplist")
-//    @RequiresPermissions("collect:equipment:list")
-    public R equiplist(@RequestParam Map<String, Object> params){
+    public R equipnamelist(@RequestParam Map<String, Object> params){
         String collecType = (String)params.get("collecType");
-        EntityWrapper wrapper = new EntityWrapper<EquipmentEntity>();
-        wrapper.eq(true,"collec_type",collecType);
-        wrapper.orderBy("insert_date", true);
-        return R.ok().put("data", wrapEquipJsonArray(equipmentService.selectList(wrapper)));
+//        EntityWrapper wrapper = new EntityWrapper<EquipmentEntity>();
+//        wrapper.eq(true,"collec_type",collecType);
+        // (ServerList(index))
+
+        List<EquipmentEntity> equipmentEnties = equipmentService.queryCompareList(collecType == null ? "1" : collecType);
+        return R.ok().put("data", equipmentEnties);
+
+      //  return R.ok().put("data", wrapEquipJsonArray(equipmentService.selectList(wrapper)));
     }
 
     /**unitlist
@@ -214,5 +256,18 @@ public class EquipmentController {
 
         return R.ok();
     }
+
+    /**
+     *  对比对象  根据 选择的类型 获取对比的对象
+     */
+    @RequestMapping("/cpmparelist/{type}")
+    public R cpmparelist(@PathVariable("type") String type){
+
+        List<EquipmentEntity> equipmentEnties = equipmentService.queryCompareList(type);
+        return R.ok().put("data", equipmentEnties);
+    }
+
+
+
 
 }

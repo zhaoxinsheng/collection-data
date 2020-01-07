@@ -23,33 +23,56 @@
     </resultMap>
 
      <select id="comparisonChartByDay" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
-           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d %H ') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
-            and t.collect_type = #{compareType}
-            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
-            group by date_format(t.insert_time, '%Y-%m-%d %H')
+         select te.id equip_id ,te.name name ,tec.color, TRUNCATE(sum(collec_value)/count(1),4) data,date_format(t.insert_time, '%H') dateStr,tec.color color
+         from  t_press t,t_equipment te ,t_equip_color tec
+         <where>
+         t.equip_id = tec.id
+         and tec.equip_id = te.id
+         and te.id  in
+             <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+                 #{item, jdbcType=INTEGER}
+             </foreach>
+             and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+             group by date_format(t.insert_time, '%Y-%m-%d %H'),t.equip_id
+         </where>
      </select>
 
-
+    <!-- 按天统计  -->
     <select id="comparisonChartByWeek" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
-           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
+           select  collect_data,
+                  date_format(t.sta_time, '%Y-%m-%d') insert_time
+            from   t_collect_statis_week t
+            where
+                t.equip_id in
+            <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+                #{item, jdbcType=INTEGER}
+            </foreach>
             and t.collect_type = #{compareType}
-            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
-            group by date_format(t.insert_time, '%Y-%m-%d')
-     </select>
+            and t.year = date_format(now(), '%Y')
+            and t.week_year = WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )
+    </select>
 
     <select id="comparisonChartByMonth" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
-           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m-%d') insert_time from   t_collect_statis_day t where t.equip_id = #{equipId}
+           select collect_data,date_format(t.insert_time, '%Y-%m-%d') insert_time
+           from   t_collect_statis_month t
+           where    t.equip_id in
+                <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+                #{item, jdbcType=INTEGER}
+            </foreach>
             and t.collect_type = #{compareType}
-            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
-            group by date_format(t.insert_time, '%Y-%m-%d')
+            and t.month = DATE_FORMAT( NOW( ), '%m' )
+             and t.year = date_format(now(), '%Y')
      </select>
 
     <select id="comparisonChartByYear" resultType="io.nakong.modules.collect.entity.CollecstatisEntity">
-           select sum(collect_data)/count(1) collect_data,date_format(t.insert_time, '%Y-%m') insert_time
-            from   t_collect_statis_day t where t.equip_id = #{equipId}
+           select collect_data ,date_format(t.insert_time, '%Y-%m') insert_time
+            from   t_collect_statis_year t
+             where    t.equip_id in
+            <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+                #{item, jdbcType=INTEGER}
+            </foreach>
             and t.collect_type = #{compareType}
-            and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
-            group by date_format(t.insert_time, '%Y-%m')
+            and t.year = date_format(now(), '%Y')
      </select>
 
     <select id="getCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
@@ -59,9 +82,84 @@
      </select>
 
     <select id="getAirCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-          SELECT sum(t.collec_value) data,equip_id  FROM  t_pipe  t
-            where 1=1 and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
-            group by t.equip_id
+
+				 select * from ( select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+        and tec.equip_id = te.id
+        and tec.collect_type ='9'
+        and t.equip_id != '1'
+        and te.id = 63
+			 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+				order  by t.insert_time desc
+				limit 1 ) t
+				union all
+		    select * from (  select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+        and tec.equip_id = te.id
+        and tec.collect_type ='9'
+        and t.equip_id != '1'
+				 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        and te.id = 64
+				 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+				order  by t.insert_time desc
+				limit 1 ) t
+	      union all
+		    select * from (  select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+        and tec.equip_id = te.id
+        and tec.collect_type ='9'
+        and t.equip_id != '1'
+				 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        and te.id = 65
+				order  by t.insert_time desc
+				limit 1 ) t
+				 union all
+		    select * from (  select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+        and tec.equip_id = te.id
+        and tec.collect_type ='9'
+        and t.equip_id != '1'
+				 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+        and te.id = 69
+				order  by t.insert_time desc
+				limit 1 ) t
+			 union all
+		     select * from (  select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+        and tec.equip_id = te.id
+        and tec.collect_type ='9'
+        and t.equip_id != '1'
+        and te.id = 70
+				 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+				order  by t.insert_time desc
+				limit 1 ) t
+				 union all
+		    select * from (  select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+        and tec.equip_id = te.id
+        and tec.collect_type ='9'
+        and t.equip_id != '1'
+        and te.id = 71
+				 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+				order  by t.insert_time desc
+				limit 1 ) t
+			  union all
+		     select * from (  select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+        from t_pipe_lj t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+        and tec.equip_id = te.id
+        and tec.collect_type ='9'
+        and t.equip_id != '1'
+        and te.id = 72
+				 and   <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
+				order  by t.insert_time desc
+				limit 1 ) t
     </select>
 
 
@@ -123,11 +221,14 @@
     </select>
 
     <select id="pressDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data,t.equip_id  equipId
-        from  t_press t
-        where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
-        group by date_format(t.insert_time, '%Y-%m-%d %H:%i'),t.equip_id
-    </select>
+        select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr, t.collec_value data,t.equip_id  equipId
+        from  t_press t ,t_equip_color tec ,t_equipment te
+        where 1=1 and t.equip_id = tec.id and tec.equip_id = te.id
+        <if test="map.id != null and map.id != ''" >
+            AND te.id = #{map.id}
+        </if>
+        and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
+     </select>
 
     <select id="pipeDataPageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
         select   date_format(t.insert_time, '%Y-%m-%d %H:%i') dateStr,sum(t.collec_value) data,t.equip_id  equipId
@@ -152,6 +253,38 @@
         from  t_temp t
         where 1=1 and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
         group by date_format(t.insert_time, '%Y-%m-%d %H:%i'),t.equip_id
+    </select>
+
+<!-- 气电比 -->
+    <select id="powerRatePageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+    select te.id equipId,
+    te.`name` NAME,
+    truncate (1.732 * 6000 * t.collec_value  *0.85/1000/60,4) powerRate,
+    date_format( t.insert_time, '%Y-%m-%d %H:%i' ) dateStr
+    from t_power t,t_equip_color tec ,t_equipment  te
+    where t.equip_id = tec.id
+    and tec.equip_id = te.id
+    and t.equip_id != '1'
+    and te.id in (53,54,55,56,57,58,59,60,61)
+    <if test="map.id != null and map.id != ''" >
+        AND te.id = #{map.id}
+    </if>
+    and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
+
+</select>
+
+    <!-- 所有设备的 电量 -->
+    <select id="powerAllRatePageList"  parameterType="io.nakong.common.page.Page" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select te.id equipId,
+        te.`name` NAME,
+        sum(truncate (1.732 * 6000 * t.collec_value  *0.85/1000/60,4)) powerRate,
+        date_format( max(t.insert_time), '%Y-%m-%d %H:%i' ) dateStr
+        from t_power t,t_equip_color tec ,t_equipment  te
+        where t.equip_id = tec.id
+            and tec.equip_id = te.id
+            and t.equip_id != '1'
+            and te.id in (53,54,55,56,57,58,59,60,61)
+            and  <![CDATA[ t.insert_time >= #{map.startDate} and t.insert_time <= #{map.endDate} ]]>
     </select>
 
 <!-- 空气成本 excel  -->
@@ -238,4 +371,365 @@
          order by t.insert_time desc
 	</select>
 
+    <!-- 统计 数据 开始 -->
+    <update id="dayPressStatisData">
+        INSERT INTO t_collect_statis_day (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collec_value ), 4 ) collect_value,
+        1,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        te.`name`,
+        tec.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_press t,
+        t_equipment te,
+        t_equip_color tec
+        WHERE
+        te.id = tec.equip_id
+        AND tec.id = t.equip_id
+        AND  <![CDATA[ t.insert_time >= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 00:00:00' ) ]]>
+        AND <![CDATA[ t.insert_time <= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 23:59:59' ) ]]>
+        GROUP BY
+        t.equip_id
+	</update>
+    <update id="dayPipeStatisData">
+        INSERT INTO t_collect_statis_day (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collec_value ), 4 ) collect_value,
+        6,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        te.`name`,
+        tec.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_pipe_lj t,
+        t_equipment te,
+        t_equip_color tec
+        WHERE
+        te.id = tec.equip_id
+        AND tec.id = t.equip_id
+        AND <![CDATA[ t.insert_time >= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 00:00:00' )  ]]>
+        AND <![CDATA[ t.insert_time <= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 23:59:59' )  ]]>
+        GROUP BY
+        t.equip_id
+    </update>
+    <update id="dayTempStatisData">
+        INSERT INTO t_collect_statis_day (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collec_value ), 4 ) collect_value,
+        4,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        te.`name`,
+        tec.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_temp t,
+        t_equipment te,
+        t_equip_color tec
+        WHERE
+        te.id = tec.equip_id
+        AND tec.id = t.equip_id
+        AND <![CDATA[ t.insert_time >= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 00:00:00' ) ]]>
+        AND <![CDATA[ t.insert_time <= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 23:59:59' ) ]]>
+        GROUP BY
+        t.equip_id
+    </update>
+    <update id="dayPowerStatisData">
+        INSERT INTO t_collect_statis_day (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collec_value ), 4 ) collect_value,
+        2,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        te.`name`,
+        tec.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_power t,
+        t_equipment te,
+        t_equip_color tec
+        WHERE
+        te.id = tec.equip_id
+        AND tec.id = t.equip_id
+        AND <![CDATA[ t.insert_time >= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 00:00:00' )  ]]>
+        AND <![CDATA[ t.insert_time <= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 23:59:59' )  ]]>
+        GROUP BY
+        t.equip_id
+    </update>
+    <update id="dayPressLdStatisData">
+        INSERT INTO t_collect_statis_day (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collec_value ), 4 ) collect_value,
+        7,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        te.`name`,
+        tec.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_press_ld t,
+        t_equipment te,
+        t_equip_color tec
+        WHERE
+        te.id = tec.equip_id
+        AND tec.id = t.equip_id
+        AND <![CDATA[ t.insert_time >= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 00:00:00' ) ]]>
+        AND <![CDATA[ t.insert_time <= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-%d 23:59:59' ) ]]>
+        GROUP BY
+        t.equip_id
+    </update>
+
+    <!-- 周统计 -->
+    <update id="weekPressStatisData">
+        INSERT INTO t_collect_statis_week (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collect_data ), 4 ) collect_value,
+        t.collect_type ,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        t.`name`,
+        t.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_collect_statis_day t
+        WHERE
+        <![CDATA[ t.sta_time >= DATE_FORMAT( DATE_SUB(DATE_SUB( now( ), INTERVAL 1 DAY ), INTERVAL WEEKDAY(DATE_SUB( now( ), INTERVAL 1 DAY )) DAY), '%Y-%m-%d 00:00:00')  ]]>
+        AND <![CDATA[  t.sta_time <= DATE_FORMAT( DATE_ADD(SUBDATE(DATE_SUB( now( ), INTERVAL 1 DAY ), WEEKDAY(DATE_SUB( now( ), INTERVAL 1 DAY ))), INTERVAL 6 DAY), '%Y-%m-%d 23:59:59')  ]]>
+        GROUP BY
+        t.equip_id
+    </update>
+
+
+
+    <!-- 删除 周统计 数据  -->
+    <delete id="deleteWeekPressStatisData">
+        delete from t_collect_statis_week  t
+        WHERE
+        <![CDATA[ t.sta_time >= DATE_FORMAT( DATE_SUB(DATE_SUB( now( ), INTERVAL 1 DAY ), INTERVAL WEEKDAY(DATE_SUB( now( ), INTERVAL 1 DAY )) DAY), '%Y-%m-%d 00:00:00')  ]]>
+        AND <![CDATA[  t.sta_time <= DATE_FORMAT( DATE_ADD(SUBDATE(DATE_SUB( now( ), INTERVAL 1 DAY ), WEEKDAY(DATE_SUB( now( ), INTERVAL 1 DAY ))), INTERVAL 6 DAY), '%Y-%m-%d 23:59:59')  ]]>
+
+    </delete>
+    <!-- 月统计 -->
+
+    <delete id="deleteMonthPressStatisData">
+        delete from t_collect_statis_month  t
+        WHERE
+         <![CDATA[ t.sta_time >= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-01 00:00:00')  ]]>
+        AND  <![CDATA[ t.sta_time <= DATE_FORMAT( LAST_DAY(DATE_SUB( now( ), INTERVAL 1 DAY )), '%Y-%m-%d 23:59:59') ]]>
+    </delete>
+
+    <update id="monthPressStatisData">
+        INSERT INTO t_collect_statis_month (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collect_data ), 4 ) collect_value,
+        t.collect_type ,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        t.`name`,
+        t.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_collect_statis_week t
+        WHERE
+         <![CDATA[ t.sta_time >= DATE_FORMAT( DATE_SUB( now( ), INTERVAL 1 DAY ), '%Y-%m-01 00:00:00')  ]]>
+        AND  <![CDATA[ t.sta_time <= DATE_FORMAT( LAST_DAY(DATE_SUB( now( ), INTERVAL 1 DAY )), '%Y-%m-%d 23:59:59') ]]>
+        GROUP BY
+        t.equip_id,t.collect_type
+    </update>
+
+    <!-- 年统计 -->
+    <delete id="deleteYearPressStatisData">
+        delete from t_collect_statis_year  t
+        where
+           <![CDATA[ t.sta_time >= DATE_FORMAT( DATE_SUB(DATE_SUB( now( ), INTERVAL 1 DAY ),INTERVAL dayofyear(DATE_SUB( now( ), INTERVAL 1 DAY ))-1 DAY), '%Y-%m-01 00:00:00')   ]]>
+        AND <![CDATA[ t.sta_time <= concat(YEAR(DATE_SUB( now( ), INTERVAL 1 DAY )),'-12-31 23:59:59')   ]]>
+    </delete>
+
+
+    <update id="yearPressStatisData">
+        INSERT INTO t_collect_statis_year (
+        `collect_data`,
+        `collect_type`,
+        `equip_id`,
+        `month`,
+        `year`,
+        week_year,
+        `insert_time`,
+        `update_time`,
+        `name`,
+        color ,
+        day,
+        sta_time
+        )
+        SELECT TRUNCATE
+        ( sum( t.collect_data ), 4 ) collect_value,
+        t.collect_type ,
+        t.equip_id,
+        DATE_FORMAT( NOW( ), '%m' )   MONTH,
+        DATE_FORMAT( NOW( ), '%Y' )  year,
+        WEEK ( date_add( now( ), INTERVAL 6 DAY ), 2 )   weeks,
+        now( ),
+        now( ),
+        t.`name`,
+        t.color ,
+        DATE_FORMAT( NOW( ), '%d' ) day,
+        DATE_FORMAT(DATE_SUB(now(),INTERVAL 1 DAY),'%Y-%m-%d') sta_time
+        FROM
+        t_collect_statis_month t
+        WHERE
+        <![CDATA[ t.sta_time >= DATE_FORMAT( DATE_SUB(DATE_SUB( now( ), INTERVAL 1 DAY ),INTERVAL dayofyear(DATE_SUB( now( ), INTERVAL 1 DAY ))-1 DAY), '%Y-%m-01 00:00:00')   ]]>
+        AND <![CDATA[ t.sta_time <= concat(YEAR(DATE_SUB( now( ), INTERVAL 1 DAY )),'-12-31 23:59:59')   ]]>
+        GROUP BY
+        t.equip_id,t.collect_type
+
+    </update>
+
+    <select id="getCurMonthCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+        select collect_data data from t_collect_statis_month t where <![CDATA[ DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(t.sta_time)  ]]>  and t.collect_type = #{collectType}
+    </select>
+    <select id="getLastMonthCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+    select collect_data data from t_collect_statis_month t where <![CDATA[ DATE_FORMAT(t.sta_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )  ]]>  and t.collect_type = #{collectType}
+    </select>
+    <select id="getCurQuarCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+   select sum(collect_data) data from t_collect_statis_month t where <![CDATA[   QUARTER(sta_time ) = QUARTER(now())   ]]>  and t.collect_type = #{collectType}
+    </select>
+    <select id="getLastQuarCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+select sum(collect_data) data from t_collect_statis_month t where <![CDATA[  PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(  sta_time, '%Y%m' ) ) = 1  ]]>  and t.collect_type = #{collectType}
+    </select>
+    <select id="getLastYearCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+select collect_data  data from t_collect_statis_year t where <![CDATA[   year(sta_time)=year(date_sub(now(),interval 1 year))  ]]>  and t.collect_type = #{collectType}
+    </select>
+    <select id="getCurYearCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
+select collect_data  data from t_collect_statis_year t where <![CDATA[   YEAR(sta_time) = YEAR(NOW())   ]]>  and t.collect_type = #{collectType}
+    </select>
 </mapper>

@@ -4,6 +4,9 @@ import io.nakong.modules.collect.entity.EquipmentEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 
@@ -16,4 +19,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 public interface EquipmentDao extends BaseMapper<EquipmentEntity> {
 
     public int insertReturnId(EquipmentEntity entity);
+
+    List<EquipmentEntity> queryCompareList(@Param("type") String type);
 }

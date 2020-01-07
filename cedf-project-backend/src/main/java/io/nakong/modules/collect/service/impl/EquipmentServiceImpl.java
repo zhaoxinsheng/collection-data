@@ -71,4 +71,10 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentDao, EquipmentEnt
     public int insertReturnId(EquipmentEntity entity){
         return equipmentDao.insertReturnId(entity);
     }
+
+
+    @Override
+    public List<EquipmentEntity> queryCompareList(String type) {
+        return equipmentDao.queryCompareList(type);
+    }
 }

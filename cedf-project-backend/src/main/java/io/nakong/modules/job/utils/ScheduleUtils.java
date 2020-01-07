@@ -17,13 +17,7 @@
 package io.nakong.modules.job.utils;
 
 import io.nakong.modules.job.entity.ScheduleJobEntity;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.JobDataMap;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.TriggerKey;
+import org.quartz.*;
 
 import io.nakong.common.exception.RRException;
 import io.nakong.common.utils.Constant;
@@ -43,7 +37,6 @@ public class ScheduleUtils {
     public static TriggerKey getTriggerKey(Long jobId) {
         return TriggerKey.triggerKey(JOB_NAME + jobId);
     }
-    
     /**
      * 获取jobKey
      */
@@ -65,31 +58,31 @@ public class ScheduleUtils {
     /**
      * 创建定时任务
      */
-//    public static void createScheduleJob(Scheduler scheduler, ScheduleJobEntity scheduleJob) {
-//        try {
-//        	//构建job信息
-//            JobDetail jobDetail = JobBuilder.newJob(ScheduleJob.class).withIdentity(getJobKey(scheduleJob.getJobId())).build();
-//
-//            //表达式调度构建器
-//            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleJob.getCronExpression())
-//            		.withMisfireHandlingInstructionDoNothing();
-//
-//            //按新的cronExpression表达式构建一个新的trigger
-//            CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(getTriggerKey(scheduleJob.getJobId())).withSchedule(scheduleBuilder).build();
-//
-//            //放入参数，运行时的方法可以获取
-//            jobDetail.getJobDataMap().put(ScheduleJobEntity.JOB_PARAM_KEY, scheduleJob);
-//
-//            scheduler.scheduleJob(jobDetail, trigger);
-//            
-//            //暂停任务
-//            if(scheduleJob.getStatus() == Constant.ScheduleStatus.PAUSE.getValue()){
-//            	pauseJob(scheduler, scheduleJob.getJobId());
-//            }
-//        } catch (SchedulerException e) {
-//            throw new RRException("创建定时任务失败", e);
-//        }
-//    }
+    public static void createScheduleJob(Scheduler scheduler, ScheduleJobEntity scheduleJob) {
+        try {
+        	//构建job信息
+            JobDetail jobDetail = JobBuilder.newJob(ScheduleJob.class).withIdentity(getJobKey(scheduleJob.getJobId())).build();
+
+            //表达式调度构建器
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(scheduleJob.getCronExpression())
+            		.withMisfireHandlingInstructionDoNothing();
+
+            //按新的cronExpression表达式构建一个新的trigger
+            CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(getTriggerKey(scheduleJob.getJobId())).withSchedule(scheduleBuilder).build();
+
+            //放入参数，运行时的方法可以获取
+            jobDetail.getJobDataMap().put(ScheduleJobEntity.JOB_PARAM_KEY, scheduleJob);
+
+            scheduler.scheduleJob(jobDetail, trigger);
+
+            //暂停任务
+            if(scheduleJob.getStatus() == Constant.ScheduleStatus.PAUSE.getValue()){
+            	pauseJob(scheduler, scheduleJob.getJobId());
+            }
+        } catch (SchedulerException e) {
+            throw new RRException("创建定时任务失败", e);
+        }
+    }
     
     /**
      * 更新定时任务

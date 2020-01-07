@@ -56,8 +56,6 @@ public class CollectThread implements Runnable {
                         Integer equipId = CacheUtils.getValue(item);
                         equipId = equipId == null ? 1 : equipId;
                         insertValue(value,equipId);
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -74,7 +72,15 @@ public class CollectThread implements Runnable {
 
     private void insertValue(String value,Integer equipId) {
         // 写数据库
-
+        /**
+         * 1  压力
+         * 2 流量
+         * 3 累计流量
+         * 4 电量
+         * 5 温度
+         * 6 瞬时流量
+         * 7 逻辑状态
+         */
         switch (collecType) {
             case 1:
                 insertPressValue(value,equipId);
@@ -98,7 +104,7 @@ public class CollectThread implements Runnable {
                 insertSsllValue(value,equipId);
                 break;
             case 8:
-
+                insertEquipStatusValue(value,equipId);
                 break;
         }
     }
@@ -106,6 +112,16 @@ public class CollectThread implements Runnable {
     // 插入管道流量 数据
     private void insertPipeValue(String value,Integer equipId) {
         PipeEntity entity = new PipeEntity();
+        entity.setCollecTime(new Date());
+        entity.setCollecValue(value);
+        entity.setInsertTime(new Date());
+        entity.setEquipId(String.valueOf(equipId));
+        insertService.insert(entity);
+    }
+
+    // 插入管道流量 数据
+    private void insertEquipStatusValue(String value,Integer equipId) {
+        EquipStatusEntity entity = new EquipStatusEntity();
         entity.setCollecTime(new Date());
         entity.setCollecValue(value);
         entity.setInsertTime(new Date());
@@ -206,10 +222,13 @@ public class CollectThread implements Runnable {
                  // tObjectAsLong();
                 return value + "";
             } else if (type == 4) {
-                // JIVariant.VT_I1
                 // byte
                 char value = jIVariant.getObjectAsChar();
                 return value + "";
+            } else if (type == 5) {
+                // boolean
+                boolean value = jIVariant.getObjectAsBoolean();
+                return value? "1" : "0";
             }
         } catch (JIException e) {
             e.printStackTrace();

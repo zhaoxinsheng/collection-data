@@ -25,4 +25,13 @@
             values(#{model},#{name},#{vendor},#{type},#{no},#{productDate},#{collecUnit},#{collecType},now())
   </insert>
 
+    <select id="queryCompareList" resultType="io.nakong.modules.collect.entity.EquipmentEntity">
+            select distinct t.*
+                from t_equipment t ,t_equip_color tec
+                where t.id = tec.equip_id
+                and tec.collect_type = #{type}
+     </select>
+
+
+
 </mapper>

@@ -234,6 +234,44 @@ public class HomeServiceImpl  extends ServiceImpl<HomeDao, HomeEntity> implement
              case 96:
                  retHome.setDevLd9(collectValue);
                  break;
+
+              //空压机状态
+             case 137:
+                 retHome.setDevStatus1(collectValue);
+                 retHome.setDevName1(equipName);
+                 break;
+             case 138:
+                 retHome.setDevStatus2(collectValue);
+                 retHome.setDevName2(equipName);
+                 break;
+             case 139:
+                 retHome.setDevStatus3(collectValue);
+                 retHome.setDevName3(equipName);
+                 break;
+             case 140:
+                 retHome.setDevStatus4(collectValue);
+                 retHome.setDevName4(equipName);
+                 break;
+             case 141:
+                 retHome.setDevStatus5(collectValue);
+                 retHome.setDevName5(equipName);
+                 break;
+             case 142:
+                 retHome.setDevStatus6(collectValue);
+                 retHome.setDevName6(equipName);
+                 break;
+             case 143:
+                 retHome.setDevStatus7(collectValue);
+                 retHome.setDevName7(equipName);
+                 break;
+             case 144:
+                 retHome.setDevStatus8(collectValue);
+                 retHome.setDevName8(equipName);
+                 break;
+             case 146:
+                 retHome.setDevStatus9(collectValue);
+                 retHome.setDevName9(equipName);
+                 break;
          }
     }
 }

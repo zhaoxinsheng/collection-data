@@ -57,6 +57,16 @@
       and tec.equip_id = te.id
 			and tec.collect_type ='1'
 			and t.equip_id != '1'
+			 and t.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+		  and not EXISTS (
+           select 1 from  t_press tps where tps.equip_id = tec.id
+             and tec.collect_type ='1'
+            and t.equip_id != '1'
+              and tps.equip_id = t.equip_id
+             and tps.id > t.id
+              and  tps.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+          )
+
 			and te.id in (53,54,55,56,57,58,59,60,61)
 		  group by t.equip_id
 			union all
@@ -65,6 +75,15 @@
       and tec.equip_id = te.id
 			and tec.collect_type ='2'
 			and t.equip_id != '1'
+			 and t.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+		  and not EXISTS (
+           select 1 from  t_power tps where tps.equip_id = tec.id
+             and tec.collect_type ='2'
+            and t.equip_id != '1'
+              and tps.equip_id = t.equip_id
+             and tps.id > t.id
+              and  tps.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+          )
 			and te.id in (53,54,55,56,57,58,59,60,61)
 		  group by t.equip_id
 		 union all
@@ -73,6 +92,15 @@
       and tec.equip_id = te.id
 			and tec.collect_type ='4'
 			and t.equip_id != '1'
+			 and t.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+		  and not EXISTS (
+           select 1 from  t_temp tps where tps.equip_id = tec.id
+             and tec.collect_type ='4'
+            and t.equip_id != '1'
+              and tps.equip_id = t.equip_id
+             and tps.id > t.id
+              and  tps.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+          )
 			and te.id in (53,54,55,56,57,58,59,60,61)
 		  group by t.equip_id
 
@@ -82,19 +110,54 @@
       and tec.equip_id = te.id
 			and tec.collect_type ='10'
 			and t.equip_id != '1'
+			  and t.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+		  and not EXISTS (
+           select 1 from  t_press_ld tps where tps.equip_id = tec.id
+             and tec.collect_type ='10'
+            and t.equip_id != '1'
+              and tps.equip_id = t.equip_id
+             and tps.id > t.id
+              and  tps.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+          )
 			and te.id = 62
+		  group by t.equip_id
+
+		  	union all
+	 	  select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'8' type,te.`name` equipName
+		from t_equip_status t,t_equip_color tec ,t_equipment  te
+     where t.equip_id = tec.id
+      and tec.equip_id = te.id
+			and tec.collect_type ='8'
+			and t.equip_id != '1'
+			  and t.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+		  and not EXISTS (
+           select 1 from  t_equip_status tps where tps.equip_id = tec.id
+             and tec.collect_type ='8'
+            and t.equip_id != '1'
+              and tps.equip_id = t.equip_id
+             and tps.id > t.id
+              and  tps.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+          )
 		  group by t.equip_id
      </select>
 
     <select id="getAllPipeList" resultType="io.nakong.modules.collect.entity.HomePipeEntity">
-
-      select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'8' type,te.`name` equipName
+select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'8' type,te.`name` equipName
         from t_pipe_ss t,t_equip_color tec ,t_equipment  te
     where t.equip_id = tec.id
           and tec.equip_id = te.id
                 and tec.collect_type ='8'
                 and t.equip_id != '1'
                 and te.id in (63,64,65,69,70,71,72)
+                and t.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+                and not EXISTS (
+           select 1 from  t_pipe_ss tps where tps.equip_id = tec.id
+             and tec.collect_type ='8'
+            and t.equip_id != '1'
+              and tps.equip_id = t.equip_id
+             and tps.id > t.id
+              and  tps.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+          )
               group by t.equip_id
                 union all
       select max(t.id),t.equip_id equip_id ,t.collec_value collectValue,'9' type,te.`name` equipName
@@ -104,6 +167,16 @@
                 and tec.collect_type ='9'
                 and t.equip_id != '1'
                 and te.id in (63,64,65,69,70,71,72)
+and  t.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+                       and not EXISTS (
+
+           select 1 from  t_pipe_lj tps where tps.equip_id = tec.id
+             and tec.collect_type ='9'
+            and t.equip_id != '1'
+              and tps.equip_id = t.equip_id
+             and tps.id > t.id
+and  tps.insert_time > DATE_SUB(NOW(),INTERVAL  5 MINUTE)
+          )
               group by t.equip_id
     </select>
     <select id="getTotalpresslist" resultType="io.nakong.modules.collect.entity.HomePipeEntity">
@@ -139,6 +212,4 @@
 	   GROUP BY
 	      DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
     </select>
-
-
 </mapper>

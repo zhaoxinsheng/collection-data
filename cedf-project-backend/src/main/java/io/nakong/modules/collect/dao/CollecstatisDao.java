@@ -21,10 +21,10 @@ import java.util.List;
 @Mapper
 public interface CollecstatisDao extends BaseMapper<CollecstatisEntity> {
 
-    List<CollecstatisEntity>  comparisonChartByDay(@Param("compareType") Integer compareType, @Param("equipId")String equipId, @Param("startDate")Date startDate,@Param("endDate") Date endDate);
-    List<CollecstatisEntity>  comparisonChartByWeek(@Param("compareType")Integer compareType, @Param("equipId")String equipId,@Param("startDate") Date startDate,@Param("endDate") Date endDate);
-    List<CollecstatisEntity>  comparisonChartByMonth(@Param("compareType")Integer compareType, @Param("equipId")String equipId, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
-    List<CollecstatisEntity>  comparisonChartByYear(@Param("compareType")Integer compareType, @Param("equipId")String equipId, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
+    List<CollecstatisEntity>  comparisonChartByDay(@Param("compareType") Integer compareType, @Param("list")List<String> equipId, @Param("startDate")Date startDate,@Param("endDate") Date endDate);
+    List<CollecstatisEntity>  comparisonChartByWeek(@Param("compareType")Integer compareType, @Param("list")List<String> equipId,@Param("startDate") Date startDate,@Param("endDate") Date endDate);
+    List<CollecstatisEntity>  comparisonChartByMonth(@Param("compareType")Integer compareType, @Param("list")List<String> equipId, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
+    List<CollecstatisEntity>  comparisonChartByYear(@Param("compareType")Integer compareType, @Param("list")List<String> equipId, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
 
     CompareDataEntity getCollectData(@Param("startDate")Date startDate, @Param("endDate")Date endDate, @Param("collectType")Integer collectType) ;
 
@@ -70,4 +70,42 @@ public interface CollecstatisDao extends BaseMapper<CollecstatisEntity> {
      */
     io.nakong.common.page.Page<CompareDataEntity>  sumPipePageList(@Param("startDate") Date startDate, @Param("endDate")Date endDate);
     List<CompareDataEntity> queryListPipePageList(io.nakong.common.page.Page<CompareDataEntity> page);
+
+    // 气电比
+    List<CompareDataEntity> powerRatePageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) ;
+    List<CompareDataEntity> powerAllRatePageList(io.nakong.common.page.Page<CompareDataEntity> pageParam) ;
+
+    void dayPressStatisData();
+
+    void dayPipeStatisData();
+
+    void dayPowerStatisData();
+
+    void dayTempStatisData();
+
+    void dayPressLdStatisData();
+
+    void weekPressStatisData();
+
+    void monthPressStatisData();
+
+    void yearPressStatisData();
+
+    void deleteWeekPressStatisData();
+
+    void deleteMonthPressStatisData();
+
+    void deleteYearPressStatisData();
+
+    CompareDataEntity getCurMonthCollectData(@Param("collectType") Integer collectType);
+
+    CompareDataEntity getLastMonthCollectData(@Param("collectType") Integer collectType);
+
+    CompareDataEntity getCurQuarCollectData(@Param("collectType") Integer collectType);
+
+    CompareDataEntity getLastQuarCollectData(@Param("collectType") Integer collectType);
+
+    CompareDataEntity getLastYearCollectData(@Param("collectType") Integer collectType);
+
+    CompareDataEntity getCurYearCollectData(@Param("collectType") Integer collectType);
 }

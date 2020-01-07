@@ -23,6 +23,19 @@ public class CompareDataEntity implements  java.io.Serializable{
     private BigDecimal powerPrice;
     // 气电比
     private Integer rate;
+
+    private Float powerRate;
+
+    private Float value;
+
+    public Float getValue() {
+        return value;
+    }
+
+    public void setValue(Float value) {
+        this.value = value;
+    }
+
     @ExcelColumn(value = "采集单位",col = 3)
     private String unitName;
 
@@ -96,5 +109,13 @@ public class CompareDataEntity implements  java.io.Serializable{
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Float getPowerRate() {
+        return powerRate;
+    }
+
+    public void setPowerRate(Float powerRate) {
+        this.powerRate = powerRate;
     }
 }

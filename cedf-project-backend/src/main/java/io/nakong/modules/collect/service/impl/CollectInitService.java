@@ -69,6 +69,9 @@ public class CollectInitService {
     @Autowired
     EquipColorService  colorService;
 
+    @Autowired
+    EquipStatusService statusService;
+
     private static int period = 1000 * 60;
 
    @PostConstruct
@@ -136,10 +139,9 @@ public class CollectInitService {
         List<EquipColorEntity> equips =  colorService.selectAllRecord();
         if(CollectionUtils.isNotEmpty(equips)){
             for (EquipColorEntity ec : equips) {
-                CacheUtils.setValue(ec.getVarname().split("-")[0],ec.getId());CacheUtils.getValue("BY_KYZ.G1.排气压力_空压机1-1-1");
+                CacheUtils.setValue(ec.getVarname().split("-")[0],ec.getId());
             }
         }
-
     }
 //    压力  1
 //    瞬时流量 2
@@ -163,6 +165,8 @@ public class CollectInitService {
                  return tempService;
              case 7:
                  return pipeSsService;
+             case 8:
+                 return statusService;
          }
          return null;
     }

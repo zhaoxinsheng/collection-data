@@ -32,6 +32,8 @@ public class CollecstatisEntity implements Serializable {
 	 */
 	@TableId
 	private Integer id;
+
+	private Integer data;
 	/**
 	 * 
 	 */
@@ -81,8 +83,36 @@ public class CollecstatisEntity implements Serializable {
 	 */
 	private Date updateTime;
 
+	private String name;
 
 	private String dateStr;
+
+	private String color;
+
+
+	public Integer getData() {
+		return data;
+	}
+
+	public void setData(Integer data) {
+		this.data = data;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public String getDateStr() {
 		return dateStr;

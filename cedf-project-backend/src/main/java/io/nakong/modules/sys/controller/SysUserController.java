@@ -7,6 +7,8 @@ import java.util.StringJoiner;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +51,9 @@ public class SysUserController extends AbstractController {
 	private SysRoleService sysRoleService;
 
 
+	protected Logger logger = LoggerFactory.getLogger(SysUserController.class);
+
+
 	/**
 	 * 所有用户列表
 	 */
@@ -69,8 +74,9 @@ public class SysUserController extends AbstractController {
 	 */
 	@GetMapping("/info")
 	public R info(){
+
 		   SysUserEntity sysUserEntity  = getUser() ;
-		
+
 			List<Long> roleList = sysUserRoleService.queryRoleIdList(sysUserEntity.getUserId());
 			if (roleList != null && roleList.size() > 0) {
 				

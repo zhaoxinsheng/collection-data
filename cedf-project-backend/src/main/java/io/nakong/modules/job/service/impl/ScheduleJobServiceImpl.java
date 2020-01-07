@@ -16,11 +16,10 @@
 
 package io.nakong.modules.job.service.impl;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
+import org.quartz.CronTrigger;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,9 @@ import io.nakong.common.utils.Query;
 import io.nakong.modules.job.dao.ScheduleJobDao;
 import io.nakong.modules.job.entity.ScheduleJobEntity;
 import io.nakong.modules.job.service.ScheduleJobService;
-import io.nakong.modules.job.utils.ScheduleUtils;
+import  io.nakong.modules.job.utils.ScheduleUtils;
+
+import javax.annotation.PostConstruct;
 
 @Service("scheduleJobService")
 public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, ScheduleJobEntity> implements ScheduleJobService {
@@ -46,19 +47,19 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, Schedule
 	/**
 	 * 项目启动时，初始化定时器
 	 */
-//	@PostConstruct
-//	public void init(){
-//		List<ScheduleJobEntity> scheduleJobList = this.selectList(null);
-//		for(ScheduleJobEntity scheduleJob : scheduleJobList){
-//			CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, scheduleJob.getJobId());
-//            //如果不存在，则创建
-//            if(cronTrigger == null) {
-//                ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
-//            }else {
-//                ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
-//            }
-//		}
-//	}
+	@PostConstruct
+	public void init(){
+		List<ScheduleJobEntity> scheduleJobList = this.selectList(null);
+		for(ScheduleJobEntity scheduleJob : scheduleJobList){
+			CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, scheduleJob.getJobId());
+            //如果不存在，则创建
+            if(cronTrigger == null) {
+                ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
+            }else {
+                ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
+            }
+		}
+	}
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -139,10 +140,21 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, Schedule
     }
 
 
-	@Override
+//	@Override
+//	public void save(ScheduleJobEntity scheduleJob) {
+//		// TODO Auto-generated method stub
+//        scheduleJob.setCreateTime(new Date());
+//        this.insert(scheduleJob);
+//	}
+
+
+    @Override
+	@Transactional(rollbackFor = Exception.class)
 	public void save(ScheduleJobEntity scheduleJob) {
-		// TODO Auto-generated method stub
-		
-	}
+		scheduleJob.setCreateTime(new Date());
+		scheduleJob.setStatus(Constant.ScheduleStatus.NORMAL.getValue());
+        this.insert(scheduleJob);
+        ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
+    }
     
 }
