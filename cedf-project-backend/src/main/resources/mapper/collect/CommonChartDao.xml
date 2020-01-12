@@ -12,7 +12,7 @@
     <select id="getPressDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
                   DATE_FORMAT(t.insert_time,'%H') AS dateInt,
-                  t.collec_value  value
+                 sum( t.collec_value ) value
                 FROM
                   t_press t ,t_equip_color tec ,t_equipment  te
                 WHERE
@@ -30,7 +30,7 @@
     <select id="getPressMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
                   DATE_FORMAT(t.insert_time,'%d') AS dateInt,
-                  t.collec_value  value
+                  sum(t.collec_value)  value
                 FROM
                   t_press t ,t_equip_color tec ,t_equipment  te
                 WHERE
@@ -50,7 +50,7 @@
     <select id="getPressYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
                   DATE_FORMAT(t.insert_time,'%m') AS dateInt,
-                  t.collec_value  value
+                 sum( t.collec_value ) value
                 FROM
                   t_press t ,t_equip_color tec ,t_equipment  te
                 WHERE
@@ -68,7 +68,7 @@
     <select id="getTempDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
 	      DATE_FORMAT(t.insert_time,'%H') AS dateInt,
-	       t.collec_value  value
+	        t.collec_value  value
         FROM
 	      t_temp t ,t_equip_color tec ,t_equipment  te
         WHERE
@@ -85,7 +85,7 @@
     <select id="getTempMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
 	      DATE_FORMAT(t.insert_time,'%d') AS dateInt,
-	       t.collec_value  value
+	       t.collec_value value
         FROM
 	      t_temp t ,t_equip_color tec ,t_equipment  te
         WHERE
@@ -102,7 +102,7 @@
     <select id="getTempYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
 	      DATE_FORMAT(t.insert_time,'%m') AS dateInt,
-	       t.collec_value  value
+	        t.collec_value   value
         FROM
 	      t_temp t ,t_equip_color tec ,t_equipment  te
         WHERE
@@ -120,7 +120,7 @@
     <select id="getTempLdDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
 	      DATE_FORMAT(t.insert_time,'%H') AS dateInt,
-	       t.collec_value  value
+	        t.collec_value   value
         FROM
 	      t_press_ld t ,t_equip_color tec ,t_equipment  te
         WHERE
@@ -136,7 +136,7 @@
     <select id="getTempLdMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
 	      DATE_FORMAT(t.insert_time,'%d') AS dateInt,
-	       t.collec_value  value
+	        t.collec_value   value
         FROM
 	      t_press_ld t ,t_equip_color tec ,t_equipment  te
         WHERE
@@ -152,7 +152,7 @@
     <select id="getTempLdYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
         SELECT
 	      DATE_FORMAT(t.insert_time,'%m') AS dateInt,
-	       t.collec_value  value
+	       t.collec_value   value
         FROM
 	      t_press_ld t ,t_equip_color tec ,t_equipment  te
         WHERE
@@ -165,4 +165,114 @@
 	      DATE_FORMAT(t.insert_time,'%Y-%m')
     </select>
 
+    <!-- 总管 流量-->
+    <!-- 总管压力 -->
+    <select id="getPipeDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%H') AS dateInt,
+                   t.collec_value   value
+                FROM
+                  t_press t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+                       and tec.id in (135,136)
+           and   DATE_FORMAT(t.insert_time,'%Y-%m-%d') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
+     </select>
+
+
+    <select id="getPipeMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%d') AS dateInt,
+                   t.collec_value  value
+                FROM
+                  t_press t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+                       and tec.id in (135,136)
+           and   DATE_FORMAT(t.insert_time,'%Y-%m') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m-%d')
+     </select>
+
+
+
+
+    <select id="getPipeYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%m') AS dateInt,
+                 t.collec_valu   value
+                FROM
+                  t_press t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+                       and tec.id in (135,136)
+           and   DATE_FORMAT(t.insert_time,'%Y') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m');
+     </select>
+
+    <!-- 能耗曲线  -->
+    <select id="getPowerDayList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%H') AS dateInt,
+                   t.collec_value  value
+                FROM
+                  t_power t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+           and   DATE_FORMAT(t.insert_time,'%Y-%m-%d') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m-%d %H')
+     </select>
+
+
+    <select id="getPowerMonthList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%d') AS dateInt,
+                   t.collec_value  value
+                FROM
+                  t_power t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+           and   DATE_FORMAT(t.insert_time,'%Y-%m') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m-%d')
+     </select>
+
+
+
+
+    <select id="getPowerYearList" resultType="io.nakong.modules.collect.entity.CommonSingleEntity">
+        SELECT
+                  DATE_FORMAT(t.insert_time,'%m') AS dateInt,
+                   t.collec_value  value
+                FROM
+                  t_power t ,t_equip_color tec ,t_equipment  te
+                WHERE
+                        t.equip_id = tec.id
+                 and tec.equip_id = te.id
+                       and t.equip_id != '1'
+                     and tec.collect_type ='1'
+                       and tec.id in (135,136)
+           and   DATE_FORMAT(t.insert_time,'%Y') = #{date}
+               GROUP BY
+                  DATE_FORMAT(t.insert_time,'%Y-%m');
+     </select>
 </mapper>

@@ -3,14 +3,22 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.jdbc.Driver
         druid:
+#            first:  #数据源1
+#                url: jdbc:mysql://192.168.188.26:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#                username: root
+#                password: root1234
+#            second:  #数据源2
+#                url: jdbc:mysql://192.168.188.26:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+#                username: root
+#                password: root1234
             first:  #数据源1
-                url: jdbc:mysql://192.168.188.26:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+                url: jdbc:mysql://localhost:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
                 username: root
-                password: root1234
+                password: root
             second:  #数据源2
-                url: jdbc:mysql://192.168.188.26:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+                url: jdbc:mysql://localhost:3306/nakong?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
                 username: root
-                password: root1234
+                password: root
             initial-size: 10
             max-active: 100
             min-idle: 10

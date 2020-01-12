@@ -42,6 +42,46 @@ public class LineController {
 
 
     /**
+     *  流量曲线 列表
+     */
+    @RequestMapping("/pipe/{type}/{date}")
+    public R pipeList(@PathVariable("type") Integer type,@PathVariable("date") String date){
+        // type =1 按天 统计 type = 2 按月统计 type = 3 按照年统计
+        String dateStr = getDateByType(type,date);
+        CommonEntity commonEntity = null;
+        if (type == 1 ) {
+            commonEntity =  lineService.getPipeDayList(dateStr);
+        } else if (type == 2) {
+            commonEntity =  lineService.getPipeMonthList(dateStr);
+        } else if (type == 3 ) {
+            commonEntity =  lineService.getPipeYearList(dateStr);
+        }
+        return R.ok().put("data", commonEntity);
+    }
+
+
+    /**
+     *  电量曲线 列表
+     */
+    @RequestMapping("/power/{type}/{date}")
+    public R powerList(@PathVariable("type") Integer type,@PathVariable("date") String date){
+        // type =1 按天 统计 type = 2 按月统计 type = 3 按照年统计
+        String dateStr = getDateByType(type,date);
+        CommonEntity commonEntity = null;
+        if (type == 1 ) {
+            commonEntity =  lineService.getPowerDayList(dateStr);
+        } else if (type == 2) {
+            commonEntity =  lineService.getPowerMonthList(dateStr);
+        } else if (type == 3 ) {
+            commonEntity =  lineService.getPowerYearList(dateStr);
+        }
+        return R.ok().put("data", commonEntity);
+    }
+
+
+
+
+    /**
      * 温度曲线
      * @param type
      * @return

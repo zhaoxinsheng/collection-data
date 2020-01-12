@@ -30,5 +30,17 @@ public interface LineService extends IService<CommonEntity> {
     CommonEntity getTempLdMonthList( String dateStr);
 
     CommonEntity getTempLdYearList( String dateStr);
+
+    CommonEntity getPipeDayList(String dateStr);
+
+    CommonEntity getPipeMonthList(String dateStr);
+
+    CommonEntity getPipeYearList(String dateStr);
+
+    CommonEntity getPowerDayList(String dateStr);
+
+    CommonEntity getPowerMonthList(String dateStr);
+
+    CommonEntity getPowerYearList(String dateStr);
 }
 

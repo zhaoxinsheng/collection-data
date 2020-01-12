@@ -83,7 +83,7 @@
 
     <select id="getAirCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
 
-				 select * from ( select  t.equip_id equip_id ,t.collec_value value,te.`name` name
+	    select * from ( select  t.equip_id equip_id ,t.collec_value value,te.`name` name
         from t_pipe_lj t,t_equip_color tec ,t_equipment  te
         where t.equip_id = tec.id
         and tec.equip_id = te.id
@@ -171,8 +171,10 @@
     </select>
 
     <select id="getPowerCollectData" resultType="io.nakong.modules.collect.entity.CompareDataEntity">
-        select  sum(t.collec_value) powerData,t.equip_id
-        from t_power t  where 1=1
+          select  sum(t.collec_value) powerData,te.name name
+        from t_power t ,t_equip_color tec , t_equipment te
+				where t.equip_id = tec.id
+			    and tec.equip_id = te.id
           and  <![CDATA[ t.insert_time >= #{startDate} and t.insert_time <= #{endDate} ]]>
         group by  t.equip_id
     </select>

@@ -16,6 +16,7 @@
 
 package io.nakong.common.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,9 +89,16 @@ public class DateUtils {
         if (StringUtils.isBlank(strDate)){
             return null;
         }
-
-        DateTimeFormatter fmt = DateTimeFormat.forPattern(pattern);
-        return fmt.parseLocalDateTime(strDate).toDate();
+        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        try {
+            return df.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+//        return df.format(dateStr);
+//        DateTimeFormatter fmt = DateTimeFormat.forPattern(pattern);
+//        return fmt.parseLocalDateTime(strDate).toDate();
     }
 
     /**

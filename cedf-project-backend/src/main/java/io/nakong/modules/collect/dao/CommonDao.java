@@ -32,4 +32,16 @@ public interface CommonDao   extends BaseMapper<CommonEntity> {
     List<CommonSingleEntity> getTempLdMonthList(@Param("date") String dateStr);
 
     List<CommonSingleEntity> getTempLdYearList(@Param("date") String dateStr);
+
+    List<CommonSingleEntity> getPipeDayList(@Param("date") String dateStr);
+
+    List<CommonSingleEntity> getPipeMonthList(@Param("date") String dateStr);
+
+    List<CommonSingleEntity> getPipeYearList(@Param("date") String dateStr);
+
+    List<CommonSingleEntity> getPowerDayList(@Param("date") String dateStr);
+
+    List<CommonSingleEntity> getPowerMonthList(@Param("date") String dateStr);
+
+    List<CommonSingleEntity> getPowerYearList(@Param("date") String dateStr);
 }

@@ -127,4 +127,33 @@ public class LineServiceImpl extends ServiceImpl<CommonDao, CommonEntity> implem
         }
         return null;
     }
+
+    @Override
+    public CommonEntity getPipeDayList(String dateStr) {
+        return getRetList(commonDao.getPipeDayList(dateStr));
+    }
+
+    @Override
+    public CommonEntity getPipeMonthList(String dateStr) {
+        return getRetList(commonDao.getPipeMonthList(dateStr));
+    }
+
+    @Override
+    public CommonEntity getPipeYearList(String dateStr) {
+        return getRetList(commonDao.getPipeYearList(dateStr));
+    }
+
+    @Override
+    public CommonEntity getPowerDayList(String dateStr) {
+        return getRetList(commonDao.getPowerDayList(dateStr));
+    }
+
+    @Override
+    public CommonEntity getPowerMonthList(String dateStr) { return getRetList(commonDao.getPowerMonthList(dateStr));
+    }
+
+    @Override
+    public CommonEntity getPowerYearList(String dateStr) {
+        return getRetList(commonDao.getPowerYearList(dateStr));
+    }
 }

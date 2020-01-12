@@ -44,13 +44,13 @@ public class SysConfigRedis {
         redisUtils.set(key, config);
     }
 
-    public void delete(String configKey) {
-        String key = RedisKeys.getSysConfigKey(configKey);
-        redisUtils.delete(key);
-    }
-
-    public SysConfigEntity get(String configKey){
-        String key = RedisKeys.getSysConfigKey(configKey);
-        return redisUtils.get(key, SysConfigEntity.class);
-    }
+//    public void delete(String configKey) {
+//        String key = RedisKeys.getSysConfigKey(configKey);
+//        redisUtils.delete(key);
+//    }
+//
+//    public SysConfigEntity get(String configKey){
+//        String key = RedisKeys.getSysConfigKey(configKey);
+//        return redisUtils.get(key, SysConfigEntity.class);
+//    }
 }

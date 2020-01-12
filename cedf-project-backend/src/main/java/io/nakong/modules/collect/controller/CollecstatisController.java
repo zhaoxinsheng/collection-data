@@ -181,7 +181,7 @@ public class CollecstatisController {
         Date startDate = DateUtils.stringToDate(startDateStr,DateUtils.DATE_PATTERN);
         Date endDate = DateUtils.stringToDate(endDateStr,DateUtils.DATE_PATTERN);
         List<CompareDataEntity>   entities = collecstatisService.getPowerCollectData(startDate,endDate);
-        return R.ok().put("data", getCompareDataEntities(entities)).put("unitName",unitName);
+        return R.ok().put("data", entities).put("unitName",unitName);
     }
 
 

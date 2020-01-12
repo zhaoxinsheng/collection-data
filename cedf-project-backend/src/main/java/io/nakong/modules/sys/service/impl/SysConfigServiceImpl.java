@@ -73,7 +73,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfigEnt
 	@Transactional(rollbackFor = Exception.class)
 	public void updateValueByKey(String key, String value) {
 		baseMapper.updateValueByKey(key, value);
-		sysConfigRedis.delete(key);
+//		sysConfigRedis.delete(key);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfigEnt
 	public void deleteBatch(Long[] ids) {
 		for(Long id : ids){
 			SysConfigEntity config = this.selectById(id);
-			sysConfigRedis.delete(config.getParamKey());
+//			sysConfigRedis.delete(config.getParamKey());
 		}
 
 		this.deleteBatchIds(Arrays.asList(ids));
@@ -89,7 +89,7 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigDao, SysConfigEnt
 
 	@Override
 	public String getValue(String key) {
-		SysConfigEntity config = sysConfigRedis.get(key);
+		SysConfigEntity config = null;//sysConfigRedis.get(key);
 		if(config == null){
 			config = baseMapper.queryByKey(key);
 			sysConfigRedis.saveOrUpdate(config);
